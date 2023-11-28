@@ -1,0 +1,21 @@
+{
+  "zabka": "cornerShop,grocery",
+  "lidl": "grocery",
+  "carrefour": "grocery",
+  "aldi": "grocery",
+  "biedronka": "grocery",
+  "rossmann": "cosmetics",
+  "media markt": "electronics",
+  "saturn": "electronics",
+  "neonet": "electronics",
+  "ikea": "furniture",
+  "deichmann": "clothing",
+  "h&m": "clothing",
+  "zara": "clothing",
+  "reserved": "clothing",
+  "mohito": "clothing",
+  "sephora": "cosmetics",
+  "douglas": "cosmetics",
+  "inglot": "cosmetics",
+  "jedzenie na mieście": "eatingOut"
+}
