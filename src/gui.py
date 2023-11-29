@@ -28,10 +28,12 @@ def open_directory(relative_path):
 
 def run_processing():
     try:
-        first_row = int(first_row_entry.get())
+        first_row = max(int(first_row_entry.get()), 2)
         last_row = int(last_row_entry.get()) if last_row_entry.get() else None
         process_transactions(first_row, last_row)
         messagebox.showinfo("Success", "Processing completed successfully.")
+    except ValueError as v:  # If the value entered is not a valid integer
+        messagebox.showerror("Error", "Problem with value reading: " + str(v))
     except Exception as e:
         messagebox.showerror("Error", str(e))
 
