@@ -2,11 +2,32 @@ import os
 import subprocess
 import sys
 import tkinter as tk
+from tkinter import ttk
 from tkinter import messagebox
 from process_transactions import process_transactions
 
 first_row_entry = None
 last_row_entry = None
+
+dark_bg = '#1e1e1e'  # very dark background color
+light_text = '#ffffff'  # white text color
+accent_color = '#d77337'  # orange accent color
+entry_bg = '#2e2e2e'  # slightly lighter background for entries
+button_active_bg = '#333333'  # button color when active/hover
+
+
+# Define the styles for the widgets
+def set_style():
+    style = ttk.Style()
+    style.theme_use('clam')
+
+    style.configure('TButton', background=dark_bg, foreground=light_text, borderwidth=0, font=('Arial', 10))
+    style.configure('TLabel', background=dark_bg, foreground=light_text, font=('Arial', 10))
+    style.configure('TEntry', foreground=light_text, fieldbackground=entry_bg, borderwidth=0, font=('Arial', 10))
+    style.map('TButton', background=[('active', button_active_bg)], foreground=[('active', light_text)])
+
+    # Remove highlight thickness from entries
+    style.configure('TEntry', highlightthickness=0)
 
 
 def open_directory(relative_path):
@@ -39,23 +60,31 @@ def run_processing():
 
 
 def setup_gui():
+    global first_row_entry, last_row_entry
+
     root = tk.Tk()
     root.title("CSV Processing")
+    set_style()  # Apply the custom style
 
-    global first_row_entry, last_row_entry
-    tk.Label(root, text="First Row:").pack()
-    first_row_entry = tk.Entry(root)
-    first_row_entry.pack()
+    # Set the main window background color
+    root.configure(bg=dark_bg)
+
+    # Create and pack widgets
+    tk.Label(root, text="First Row:").pack(pady=(10, 0), padx=10)
+    first_row_entry = ttk.Entry(root)
+    first_row_entry.pack(pady=(0, 10), padx=10, fill='x')
     first_row_entry.insert(0, "2")  # Default value
 
-    tk.Label(root, text="Last Row (optional):").pack()
-    last_row_entry = tk.Entry(root)
-    last_row_entry.pack()
+    tk.Label(root, text="Last Row (optional):").pack(pady=(10, 0), padx=10)
+    last_row_entry = ttk.Entry(root)
+    last_row_entry.pack(pady=(0, 10), padx=10, fill='x')
 
-    tk.Button(root, text="Run Processing", command=run_processing).pack()
-    tk.Button(root, text="Open Dictionary Directory", command=lambda: open_directory('./dictionary')).pack()
-    tk.Button(root, text="Open Backup Directory", command=lambda: open_directory('./backup')).pack()
-    tk.Button(root, text="Open CSV Directory", command=lambda: open_directory('./csv')).pack()
+    process_button = ttk.Button(root, text="Run Processing", command=run_processing)
+    process_button.pack(pady=(0, 10), padx=10, fill='x')
+
+    ttk.Button(root, text="Open Dictionary Directory", command=lambda: open_directory('./dictionary')).pack(pady=(0, 10), padx=10, fill='x')
+    ttk.Button(root, text="Open Backup Directory", command=lambda: open_directory('./backup')).pack(pady=(0, 10), padx=10, fill='x')
+    ttk.Button(root, text="Open CSV Directory", command=lambda: open_directory('./csv')).pack(pady=(0, 10), padx=10, fill='x')
 
     root.mainloop()
 
