@@ -1,93 +1,122 @@
-import os
-import subprocess
-import sys
-import tkinter as tk
-from tkinter import ttk
-from tkinter import messagebox
-from process_transactions import process_transactions
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout)
 
-first_row_entry = None
-last_row_entry = None
-
-dark_bg = '#1e1e1e'  # very dark background color
-light_text = '#ffffff'  # white text color
-accent_color = '#d77337'  # orange accent color
-entry_bg = '#2e2e2e'  # slightly lighter background for entries
-button_active_bg = '#333333'  # button color when active/hover
+import config.constants as cts
+from config.style_config import get_app_style, get_process_button_style
+from gui_elements.title_bar import TitleBar
+from gui_elements.widget_assembler import *
+from processor.process_transactions import *
 
 
-# Define the styles for the widgets
-def set_style():
-    style = ttk.Style()
-    style.theme_use('clam')
+class FramelessMainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.m_dragPosition = None
+        self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
+        self.setWindowTitle("CSV Processing")
+        self.setWindowIcon(QIcon(cts.app_icon))
 
-    style.configure('TButton', background=dark_bg, foreground=light_text, borderwidth=0, font=('Arial', 10))
-    style.configure('TLabel', background=dark_bg, foreground=light_text, font=('Arial', 10))
-    style.configure('TEntry', foreground=light_text, fieldbackground=entry_bg, borderwidth=0, font=('Arial', 10))
-    style.map('TButton', background=[('active', button_active_bg)], foreground=[('active', light_text)])
+        # Central Widget and Layouts
+        self.central_widget = QWidget()
+        # Creates an object that will manage the layout within self.central_widget
+        self.main_layout = QVBoxLayout(self.central_widget)
+        # Sets the layout manager for central_widget to main_layout
+        self.central_widget.setLayout(self.main_layout)
+        # sets central_widget as the central widget of the QMainWindow.
+        self.setCentralWidget(self.central_widget)
 
-    # Remove highlight thickness from entries
-    style.configure('TEntry', highlightthickness=0)
+        # Custom Title Bar
+        self.title_bar = TitleBar(self)
+        self.main_layout.addWidget(self.title_bar, alignment=Qt.AlignTop)
 
+        # Content Widget and Layout
+        self.content_widget = QWidget()
+        # Placing content_widget (which will contain other widgets or layouts)
+        # within the space managed by the content_layout.
+        # Widgets and layouts that are added to content_layout will appear within content_widget.
+        self.content_layout = QVBoxLayout(self.content_widget)
 
-def open_directory(relative_path):
-    # Get the absolute path to the directory where the script is located
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    # Navigate up one directory from the script's location
-    parent_dir = os.path.dirname(script_dir)
-    # Construct the absolute path to the desired directory
-    directory_path = os.path.normpath(os.path.join(parent_dir, relative_path))
+        # Directory Buttons
+        self.dir_buttons_layout = QHBoxLayout()
 
-    # Attempt to open the directory using the default file explorer
-    if sys.platform == "win32":
-        os.startfile(directory_path)
-    elif sys.platform == "darwin":  # macOS
-        subprocess.Popen(["open", directory_path])
-    else:  # Linux and other Unix-like OS
-        subprocess.Popen(["xdg-open", directory_path])
+        self.dictionary_button = create_directory_button(
+            "Open Dictionary Directory",
+            "./dictionary",
+            QIcon('icons/dictionary.png')
+        )
+        self.backup_button = create_directory_button(
+            "Open Backup Directory",
+            "./backup",
+            QIcon('icons/file-backup.png')
+        )
+        self.csv_button = create_directory_button(
+            "Open CSV Directory",
+            "./csv",
+            QIcon('icons/csv-file.png')
+        )
 
+        self.dir_buttons_layout.addWidget(self.dictionary_button)
+        self.dir_buttons_layout.addWidget(self.backup_button)
+        self.dir_buttons_layout.addWidget(self.csv_button)
 
-def run_processing():
-    try:
-        first_row = max(int(first_row_entry.get()), 2)
-        last_row = int(last_row_entry.get()) if last_row_entry.get() else None
+        self.content_layout.addLayout(self.dir_buttons_layout)
+
+        # QVBoxLayout for vertical, QHBoxLayout for horizontal
+        self.input_fields_layout = QHBoxLayout()
+
+        # First Row Input
+        self.first_row_input_field, self.first_row_layout = create_labeled_input("First Row:", "2")
+        # self.content_layout.addLayout(self.first_row_layout)
+
+        self.input_fields_layout.addLayout(self.first_row_layout)
+
+        # Last Row Input
+        self.last_row_input_field, self.last_row_layout = create_labeled_input("Last Row (optional):", "")
+        # self.content_layout.addLayout(self.last_row_layout)
+        self.input_fields_layout.addLayout(self.last_row_layout)
+
+        self.content_layout.addLayout(self.input_fields_layout)
+
+        # Process Button
+        self.process_button = self.create_process_button()
+        self.content_layout.addWidget(self.process_button)
+
+        # Add content to the main layout
+        # Widget needs to be added to the layout to be visible,
+        # adding content_layout to main_layout will not show widgets in it
+        self.main_layout.addWidget(self.content_widget)
+
+        self.set_style()
+
+    def set_style(self):
+        self.setStyleSheet(get_app_style())
+        self.process_button.setStyleSheet(get_process_button_style())
+
+    def create_process_button(self):
+        button = QPushButton("Run Processing")
+        button.clicked.connect(self.run_processing)
+        return button
+
+    def run_processing(self):
+        first_row = int(self.first_row_input_field.text())
+        last_row = int(self.last_row_input_field.text()) if self.last_row_input_field.text() else None
         process_transactions(first_row, last_row)
-        messagebox.showinfo("Success", "Processing completed successfully.")
-    except ValueError as v:  # If the value entered is not a valid integer
-        messagebox.showerror("Error", "Problem with value reading: " + str(v))
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
+        create_pop_up()
 
+    # Window movement methods
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.m_dragPosition = event.globalPosition().toPoint()
 
-def setup_gui():
-    global first_row_entry, last_row_entry
-
-    root = tk.Tk()
-    root.title("CSV Processing")
-    set_style()  # Apply the custom style
-
-    # Set the main window background color
-    root.configure(bg=dark_bg)
-
-    # Create and pack widgets
-    tk.Label(root, text="First Row:").pack(pady=(10, 0), padx=10)
-    first_row_entry = ttk.Entry(root)
-    first_row_entry.pack(pady=(0, 10), padx=10, fill='x')
-    first_row_entry.insert(0, "2")  # Default value
-
-    tk.Label(root, text="Last Row (optional):").pack(pady=(10, 0), padx=10)
-    last_row_entry = ttk.Entry(root)
-    last_row_entry.pack(pady=(0, 10), padx=10, fill='x')
-
-    process_button = ttk.Button(root, text="Run Processing", command=run_processing)
-    process_button.pack(pady=(0, 10), padx=10, fill='x')
-
-    ttk.Button(root, text="Open Dictionary Directory", command=lambda: open_directory('./dictionary')).pack(pady=(0, 10), padx=10, fill='x')
-    ttk.Button(root, text="Open Backup Directory", command=lambda: open_directory('./backup')).pack(pady=(0, 10), padx=10, fill='x')
-    ttk.Button(root, text="Open CSV Directory", command=lambda: open_directory('./csv')).pack(pady=(0, 10), padx=10, fill='x')
-
-    root.mainloop()
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            self.move(self.pos() + event.globalPosition().toPoint() - self.m_dragPosition)
+            self.m_dragPosition = event.globalPosition().toPoint()
 
 
 if __name__ == "__main__":
-    setup_gui()
+    app = QApplication(sys.argv)
+    window = FramelessMainWindow()
+    window.show()
+    sys.exit(app.exec())
