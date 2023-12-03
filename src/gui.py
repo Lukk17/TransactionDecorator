@@ -2,11 +2,11 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout)
 
-import config.constants as cts
-from config.style_config import get_app_style, get_process_button_style
-from gui_elements.title_bar import TitleBar
-from gui_elements.widget_assembler import *
-from processor.process_transactions import *
+import src.config.constants as cts
+from src.config.style_config import get_app_style, get_process_button_style
+from src.gui_elements.title_bar import TitleBar
+from src.gui_elements.widget_assembler import *
+from src.processor.process_transactions import *
 
 
 class FramelessMainWindow(QMainWindow):
@@ -19,10 +19,13 @@ class FramelessMainWindow(QMainWindow):
 
         # Central Widget and Layouts
         self.central_widget = QWidget()
+
         # Creates an object that will manage the layout within self.central_widget
         self.main_layout = QVBoxLayout(self.central_widget)
+
         # Sets the layout manager for central_widget to main_layout
         self.central_widget.setLayout(self.main_layout)
+
         # sets central_widget as the central widget of the QMainWindow.
         self.setCentralWidget(self.central_widget)
 
@@ -32,6 +35,7 @@ class FramelessMainWindow(QMainWindow):
 
         # Content Widget and Layout
         self.content_widget = QWidget()
+
         # Placing content_widget (which will contain other widgets or layouts)
         # within the space managed by the content_layout.
         # Widgets and layouts that are added to content_layout will appear within content_widget.
@@ -42,18 +46,18 @@ class FramelessMainWindow(QMainWindow):
 
         self.dictionary_button = create_directory_button(
             "Open Dictionary Directory",
-            "./dictionary",
-            QIcon('icons/dictionary.png')
+            "./dictionary/",
+            QIcon(resource_path('./src/icons/dictionary.png'))
         )
         self.backup_button = create_directory_button(
             "Open Backup Directory",
-            "./backup",
-            QIcon('icons/file-backup.png')
+            "./backup/",
+            QIcon(resource_path('./src/icons/file-backup.png'))
         )
         self.csv_button = create_directory_button(
             "Open CSV Directory",
-            "./csv",
-            QIcon('icons/csv-file.png')
+            "./csv/",
+            QIcon(resource_path('./src/icons/csv-file.png'))
         )
 
         self.dir_buttons_layout.addWidget(self.dictionary_button)
@@ -67,13 +71,11 @@ class FramelessMainWindow(QMainWindow):
 
         # First Row Input
         self.first_row_input_field, self.first_row_layout = create_labeled_input("First Row:", "2")
-        # self.content_layout.addLayout(self.first_row_layout)
 
         self.input_fields_layout.addLayout(self.first_row_layout)
 
         # Last Row Input
         self.last_row_input_field, self.last_row_layout = create_labeled_input("Last Row (optional):", "")
-        # self.content_layout.addLayout(self.last_row_layout)
         self.input_fields_layout.addLayout(self.last_row_layout)
 
         self.content_layout.addLayout(self.input_fields_layout)

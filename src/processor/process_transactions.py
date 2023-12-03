@@ -6,6 +6,8 @@ from tkinter import messagebox
 
 import pandas as pd
 
+from src.utils.utils import resource_path
+
 
 def normalize_string(s):
     if pd.isnull(s):
@@ -63,17 +65,16 @@ def update_labels(df, dictionary, first_row, last_row):
         df.loc[i, 'Labels'] = ';'.join(labels)
 
 
-# by default, last_row is set to '0' to process whole file
+# by default, last_row is set to '0' to process the whole file
 def process_transactions(first_row=2, last_row=None):
     print("Starting processing...")
     # If first_row is less than 2, set it to 2
     first_row = max(int(first_row), 2)
 
     # Define paths relative to the script file
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    dictionary_path = os.path.join(script_dir, '../..', 'dictionary', 'dictionary.json')
-    csv_path = os.path.join(script_dir, '../..', 'csv', 'allTransactions.csv')
-    backup_dir = os.path.join(script_dir, '../..', 'backup')
+    dictionary_path = resource_path('dictionary/dictionary.json')
+    csv_path = resource_path('csv/allTransactions.csv')
+    backup_dir = resource_path('backup/')
 
     create_backup(csv_path, backup_dir)
     dictionary = load_dictionary(dictionary_path)
