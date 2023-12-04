@@ -30,8 +30,8 @@ def open_directory(relative_path):
         Popen(["xdg-open", directory_path])
 
 
-def create_pop_up():
-    dialog = ConfirmationDialog()
+def create_pop_up(is_success, message):
+    dialog = ConfirmationDialog(is_success=is_success, message=message)
     dialog.exec()
 
 

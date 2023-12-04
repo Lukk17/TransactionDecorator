@@ -47,17 +47,17 @@ class FramelessMainWindow(QMainWindow):
         self.dictionary_button = create_directory_button(
             "Open Dictionary Directory",
             "./dictionary/",
-            QIcon(resource_path('./src/icons/dictionary.png'))
+            QIcon(resource_path('./icons/dictionary.png'))
         )
         self.backup_button = create_directory_button(
             "Open Backup Directory",
             "./backup/",
-            QIcon(resource_path('./src/icons/file-backup.png'))
+            QIcon(resource_path('./icons/file-backup.png'))
         )
         self.csv_button = create_directory_button(
             "Open CSV Directory",
             "./csv/",
-            QIcon(resource_path('./src/icons/csv-file.png'))
+            QIcon(resource_path('./icons/csv-file.png'))
         )
 
         self.dir_buttons_layout.addWidget(self.dictionary_button)
@@ -103,8 +103,15 @@ class FramelessMainWindow(QMainWindow):
     def run_processing(self):
         first_row = int(self.first_row_input_field.text())
         last_row = int(self.last_row_input_field.text()) if self.last_row_input_field.text() else None
-        process_transactions(first_row, last_row)
-        create_pop_up()
+        is_success, message = process_transactions(first_row, last_row)
+        create_pop_up(is_success, message)
+
+        if is_success:
+            self.open_csv_directory()
+
+    def open_csv_directory(self):
+        # Programmatically trigger a click on the csv_button
+        self.csv_button.click()
 
     # Window movement methods
     def mousePressEvent(self, event):

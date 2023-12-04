@@ -2,6 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton
 import src.config.constants as cts
+from src.utils.utils import resource_path
 
 
 class TitleBar(QFrame):
@@ -12,10 +13,10 @@ class TitleBar(QFrame):
         self.layout.setSpacing(0)  # No spacing between widgets
         self.setStyleSheet("background-color: #2e2e2e;")  # Title bar background color
 
-        self.maximize_icon = QIcon('icons/maximize.png')
-        self.restore_icon = QIcon('icons/restore.png')
-        self.minimize_icon = QIcon('icons/minimize.png')
-        self.close_icon = QIcon('icons/close.png')
+        self.maximize_icon = QIcon(resource_path('./icons/maximize.png'))
+        self.restore_icon = QIcon(resource_path('./icons/restore.png'))
+        self.minimize_icon = QIcon(resource_path('./icons/minimize.png'))
+        self.close_icon = QIcon(resource_path('./icons/close.png'))
 
         # Control Buttons
         button_size = 30  # The fixed size for the buttons
