@@ -5,38 +5,38 @@ def get_app_style():
     return f"""
             QMainWindow {{
                 padding: 0px;
-                background-color: {cts.background_color};
+                background-color: {cts.BACKGROUND_COLOR};
             }}
             QPushButton {{
-                background-color: {cts.button_background_color};
-                border-radius: {cts.border_radius};
+                background-color: {cts.BUTTON_BACKGROUND_COLOR};
+                border-radius: {cts.BORDER_RADIUS};
                 border: none;
-                padding: {cts.button_padding};
-                icon-size: {cts.folder_icon_size};
+                padding: {cts.BUTTON_PADDING};
+                icon-size: {cts.FOLDER_ICON_SIZE};
             }}
             QPushButton:hover {{
-                background-color: {cts.button_hover_color};
+                background-color: {cts.BUTTON_HOVER_COLOR};
             }}
             QPushButton:pressed {{
-                background-color: {cts.button_pressed_color};
+                background-color: {cts.BUTTON_PRESSED_COLOR};
             }}
             QLineEdit {{
-                color: {cts.field_text_color};
-                background-color: {cts.field_background_color};
-                border-radius: {cts.border_radius};
+                color: {cts.FIELD_TEXT_COLOR};
+                background-color: {cts.FIELD_BACKGROUND_COLOR};
+                border-radius: {cts.BORDER_RADIUS};
                 padding: 5px;
                 border: none;
                 outline: none;
                 box-shadow: 4px 4px 6px #1a1c1e, -4px -4px 6px #3e4247;
             }}
             QLineEdit:hover {{
-                background-color: {cts.field_hover_color};
+                background-color: {cts.FIELD_HOVER_COLOR};
             }}
             QLineEdit:focus {{
-                background-color: {cts.field_focus_color};
+                background-color: {cts.FIELD_FOCUS_COLOR};
             }}
             QLabel {{
-                color: {cts.label_text_color};
+                color: {cts.LABEL_TEXT_COLOR};
             }}
         """
 
@@ -44,12 +44,12 @@ def get_app_style():
 def get_process_button_style():
     return f"""
             QPushButton {{
-                background-color: {cts.process_button_background_color}; 
+                background-color: {cts.PROCESS_BUTTON_BACKGROUND_COLOR}; 
                 border: none; 
                 color: white; 
                 padding: 5px; 
             }}
             QPushButton:hover {{
-                background-color: {cts.process_button_hover_color}; 
+                background-color: {cts.PROCESS_BUTTON_HOVER_COLOR}; 
             }}
         """

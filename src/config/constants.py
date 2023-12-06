@@ -1,50 +1,60 @@
+APP_NAME = 'TransactionDecorator'
+
 # Processing constants
 CSV_DELIMITER = ';'
 LABELS_DELIMITER = ','
 NOTE_COLUMN = 'Note'
 LABELS_COLUMN = 'Labels'
 
-# Directory path constants
-app_icon = 'icons/logo.png'
+# Internal constants paths
+APP_ICON = 'icons/logo.png'
 
-maximize_icon_path = 'icons/maximize.png'
-restore_icon_path = 'icons/restore.png'
-minimize_icon_path = 'icons/minimize.png'
-close_icon_path = 'icons/close.png'
+MAXIMIZE_ICON_PATH = 'icons/maximize.png'
+RESTORE_ICON_PATH = 'icons/restore.png'
+MINIMIZE_ICON_PATH = 'icons/minimize.png'
+CLOSE_ICON_PATH = 'icons/close.png'
 
-dictionary_icon_path = 'icons/dictionary.png'
-file_backup_icon_path = 'icons/file-backup.png'
-csv_file_icon_path = 'icons/csv-file.png'
+DICTIONARY_ICON_PATH = 'icons/dictionary.png'
+FILE_BACKUP_ICON_PATH = 'icons/file-backup.png'
+CSV_FILE_ICON_PATH = 'icons/csv-file.png'
 
-dictionary_directory_path = './dictionary'
-file_backup_directory_path = './backup'
-csv_file_directory_path = './csv'
+# External / User constants paths
+DICTIONARY_DIRECTORY_PATH = './dictionary'
+FILE_BACKUP_DIRECTORY_PATH = './backup'
+CSV_FILE_DIRECTORY_PATH = './csv'
+
+DICTIONARY_NAME = 'labels-dictionary.json'
+TRANSACTION_CSV_NAME = 'allTransactions.csv'
 
 # UI setup
-control_button_icon_size = '15px'
-folder_icon_size = '30px'
-border_radius = '10px'
-button_padding = '10px'
+CONFIRMATION_BUTTON_TEXT = 'OK'
 
-dialog_font_size = 12
+# UI size
+CONTROL_BUTTON_ICON_SIZE = '15px'
+FOLDER_ICON_SIZE = '30px'
+BORDER_RADIUS = '10px'
+BUTTON_PADDING = '10px'
+
+SUCCESS_DIALOG_FONT_SIZE = 12
+ERROR_DIALOG_FONT_SIZE = 6
 
 # Colors
-background_color = '#2e2e2e'
+BACKGROUND_COLOR = '#2e2e2e'
 
-button_background_color = '#333'
-button_hover_color = '#35393d'
-button_pressed_color = '#e78450'
+BUTTON_BACKGROUND_COLOR = '#333'
+BUTTON_HOVER_COLOR = '#35393d'
+BUTTON_PRESSED_COLOR = '#e78450'
 
-field_background_color = '#333'
-field_hover_color = '#35393d'
-field_focus_color = '#414449'
+FIELD_BACKGROUND_COLOR = '#333'
+FIELD_HOVER_COLOR = '#35393d'
+FIELD_FOCUS_COLOR = '#414449'
 
-label_text_color = '#e0e2e4'
-field_text_color = '#e0e2e4'
+LABEL_TEXT_COLOR = '#e0e2e4'
+FIELD_TEXT_COLOR = '#e0e2e4'
 
-control_button_background_color = '#2e2e2e'
-control_button_hover_color = '#35393d'
+CONTROL_BUTTON_BACKGROUND_COLOR = '#2e2e2e'
+CONTROL_BUTTON_HOVER_COLOR = '#35393d'
 
-process_button_background_color = '#d77337'
-process_button_hover_color = '#e78450'
-process_button_pressed_color = '#e78450'
+PROCESS_BUTTON_BACKGROUND_COLOR = '#d77337'
+PROCESS_BUTTON_HOVER_COLOR = '#e78450'
+PROCESS_BUTTON_PRESSED_COLOR = '#e78450'

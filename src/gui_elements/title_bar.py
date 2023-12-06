@@ -45,15 +45,15 @@ class TitleBar(QFrame):
         button.clicked.connect(callback)
         button_style = f"""
             QPushButton {{ 
-                background-color: {cts.control_button_background_color}; 
+                background-color: {cts.CONTROL_BUTTON_BACKGROUND_COLOR}; 
                 border: none; 
-                icon-size: {cts.control_button_icon_size};
+                icon-size: {cts.CONTROL_BUTTON_ICON_SIZE};
             }}
             QPushButton:hover {{ 
-                background-color: {cts.control_button_hover_color};
+                background-color: {cts.CONTROL_BUTTON_HOVER_COLOR};
             }}
             QPushButton:pressed {{
-            background-color: {cts.button_pressed_color};
+            background-color: {cts.BUTTON_PRESSED_COLOR};
             }}
         """
         button.setStyleSheet(button_style)

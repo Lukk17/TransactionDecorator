@@ -8,12 +8,12 @@ import src.config.constants as cts
 def get_main_stylesheet():
     return f"""
         QDialog {{
-            background-color: {cts.background_color};
-            border-radius: {cts.border_radius};
+            background-color: {cts.BACKGROUND_COLOR};
+            border-radius: {cts.BORDER_RADIUS};
             padding: 0px;
         }}
         QLabel {{
-            color: {cts.field_text_color};
+            color: {cts.FIELD_TEXT_COLOR};
         }}
     """
 
@@ -21,16 +21,16 @@ def get_main_stylesheet():
 def get_button_stylesheet():
     return f"""
         QPushButton {{
-            background-color: {cts.process_button_background_color};
+            background-color: {cts.PROCESS_BUTTON_BACKGROUND_COLOR};
             border-radius: 10px;
             padding: 10px;
             min-width: 80px;
         }}
         QPushButton:hover {{
-            background-color: {cts.process_button_hover_color};
+            background-color: {cts.PROCESS_BUTTON_HOVER_COLOR};
         }}
         QPushButton:pressed {{
-            background-color: {cts.process_button_pressed_color};
+            background-color: {cts.PROCESS_BUTTON_PRESSED_COLOR};
         }}
     """
 
@@ -40,9 +40,15 @@ class ConfirmationDialog(QDialog):
         super().__init__(parent)
         self.m_dragPosition = None
         self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
-        self.setWindowTitle("Success" if is_success else "Error")
+        self.setWindowIcon(QIcon(cts.APP_ICON))
         self.setFixedSize(300, 200)
-        self.setWindowIcon(QIcon(cts.app_icon))
+
+        if is_success:
+            self.setWindowTitle("Success")
+            font_size = cts.SUCCESS_DIALOG_FONT_SIZE
+        else:
+            self.setWindowTitle("Error")
+            font_size = cts.ERROR_DIALOG_FONT_SIZE
 
         # Use QVBoxLayout for vertical layout
         layout = QVBoxLayout()
@@ -51,12 +57,13 @@ class ConfirmationDialog(QDialog):
         label = QLabel(message)
         label.setAlignment(Qt.AlignCenter)  # Center the text
         font = label.font()
-        font.setPointSize(cts.dialog_font_size)
+        font.setPointSize(font_size)
         label.setFont(font)
-        label.setStyleSheet(f"color: {cts.field_text_color};")
+        label.setWordWrap(True)
+        label.setStyleSheet(f"color: {cts.FIELD_TEXT_COLOR};")
 
         # Create an OK button with the appropriate styling
-        ok_button = QPushButton("OK")
+        ok_button = QPushButton(cts.CONFIRMATION_BUTTON_TEXT)
         ok_button.setStyleSheet(get_button_stylesheet())
         ok_button.clicked.connect(self.accept)  # Connect the button click to QDialog's accept slot
 

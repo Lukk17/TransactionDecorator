@@ -5,8 +5,8 @@ from datetime import datetime
 
 import pandas as pd
 
-from src.config.constants import *
-from src.utils.utils import resource_path
+import src.config.constants as cts
+from src.utils.utils import user_directory_path
 
 
 def normalize_string(s):
@@ -39,16 +39,17 @@ def load_dictionary(dictionary_path):
         dictionary_data = json.load(file)
     print("Normalize dictionary keys to lowercase")
     normalized_dictionary = {normalize_string(key): value for key, value in dictionary_data.items()}
+
     return normalized_dictionary
 
 
 def update_labels(df, dictionary, first_row, last_row):
-    print("ProcessING labels if the '%s' column is not NaN" % LABELS_COLUMN)
+    print("ProcessING labels if the '%s' column is not NaN" % cts.LABELS_COLUMN)
     for i in range(first_row - 1, min(last_row, len(df))):
-        note = normalize_string(df.loc[i, ('%s' % NOTE_COLUMN)])
-
-        if pd.notna(df.loc[i, ('%s' % LABELS_COLUMN)]):
-            labels = df.loc[i, LABELS_COLUMN].split(CSV_DELIMITER)
+        note = normalize_string(df.loc[i, ('%s' % cts.NOTE_COLUMN)])
+        print(note)
+        if pd.notna(df.loc[i, ('%s' % cts.LABELS_COLUMN)]):
+            labels = df.loc[i, cts.LABELS_COLUMN].split(cts.CSV_DELIMITER)
             # Normalize labels for comparison but keep the original case for output
             normalized_labels = [normalize_string(label) for label in labels if label]
         else:
@@ -60,43 +61,48 @@ def update_labels(df, dictionary, first_row, last_row):
             normalized_key = normalize_string(key)
 
             if normalized_key in note:
-                for value in values.split(LABELS_DELIMITER):
+                for value in values.split(cts.LABELS_DELIMITER):
                     # Check if the value, in a normalized form, is not already in labels
                     if normalize_string(value) not in normalized_labels:
                         labels.append(value)  # Append the original case value
 
         # Joining the labels with a CSV_DELIMITER to save back to CSV
-        df.loc[i, LABELS_COLUMN] = ';'.join(labels)
+        df.loc[i, cts.LABELS_COLUMN] = ';'.join(labels)
 
 
 # by default, last_row is set to '0' to process the whole file
-def process_transactions(first_row=2, last_row=None):
+def process_transactions(first_row=1, last_row=None):
     print("Starting processing...")
-    # If first_row is less than 2, set it to 2
-    first_row = max(int(first_row), 2)
-
-    # Define paths relative to the script file
-    dictionary_path = resource_path(f'{dictionary_directory_path}/dictionary.json')
-    csv_path = resource_path(f'{csv_file_directory_path}/allTransactions.csv')
-    backup_dir = resource_path(f'{file_backup_directory_path}/')
-
-    create_backup(csv_path, backup_dir)
-    dictionary = load_dictionary(dictionary_path)
-
     try:
-        df = pd.read_csv(csv_path, delimiter=CSV_DELIMITER)
-        if last_row is None or last_row > len(df):
-            last_row = len(df)
+        # If first_row is less than 1, set it to 1
+        first_row = max(int(first_row), 1)
 
-        update_labels(df, dictionary, first_row, last_row)
-        df.to_csv(csv_path, sep=('%s' % CSV_DELIMITER), index=False)
+        # Define paths relative to the script file
+        dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.DICTIONARY_NAME}')
+        csv_path = user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}/{cts.TRANSACTION_CSV_NAME}')
+        backup_dir = user_directory_path(f'{cts.FILE_BACKUP_DIRECTORY_PATH}/')
 
-    except pd.errors.ParserError as e:
+        create_backup(csv_path, backup_dir)
+        dictionary = load_dictionary(dictionary_path)
+
+        try:
+            df = pd.read_csv(csv_path, delimiter=cts.CSV_DELIMITER)
+            if last_row is None or last_row > len(df):
+                last_row = len(df)
+
+            update_labels(df, dictionary, first_row, last_row)
+            df.to_csv(csv_path, sep=('%s' % cts.CSV_DELIMITER), index=False)
+
+        except pd.errors.ParserError as e:
+            print(f"Error parsing CSV file in line: {e}")
+            return False, f"Error parsing CSV file in line: {e}"
+
+        print("Processing finished.")
+        return True, "Processing completed successfully."
+
+    except Exception as e:
         print(f"Error parsing CSV file in line: {e}")
         return False, f"Error parsing CSV file in line: {e}"
-
-    print("Processing finished.")
-    return True, "Processing completed successfully."
 
 
 if __name__ == "__main__":

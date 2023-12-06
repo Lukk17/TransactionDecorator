@@ -2,11 +2,11 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout)
 
-import src.config.constants as cts
 from src.config.style_config import get_app_style, get_process_button_style
 from src.gui_elements.title_bar import TitleBar
 from src.gui_elements.widget_assembler import *
 from src.processor.process_transactions import *
+from src.utils.utils import resource_path
 
 
 class FramelessMainWindow(QMainWindow):
@@ -15,7 +15,7 @@ class FramelessMainWindow(QMainWindow):
         self.m_dragPosition = None
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
         self.setWindowTitle("CSV Processing")
-        self.setWindowIcon(QIcon(cts.app_icon))
+        self.setWindowIcon(QIcon(resource_path(cts.APP_ICON)))
 
         # Central Widget and Layouts
         self.central_widget = QWidget()
@@ -45,18 +45,18 @@ class FramelessMainWindow(QMainWindow):
         self.dir_buttons_layout = QHBoxLayout()
 
         self.dictionary_button = create_directory_button(
-            "Open Dictionary Directory",
-            "./dictionary/",
+            'Open Dictionary Directory',
+            f'{cts.DICTIONARY_DIRECTORY_PATH}/',
             QIcon(resource_path('./icons/dictionary.png'))
         )
         self.backup_button = create_directory_button(
-            "Open Backup Directory",
-            "./backup/",
+            'Open Backup Directory',
+            f'{cts.FILE_BACKUP_DIRECTORY_PATH}/',
             QIcon(resource_path('./icons/file-backup.png'))
         )
         self.csv_button = create_directory_button(
-            "Open CSV Directory",
-            "./csv/",
+            'Open CSV Directory',
+            f'{cts.CSV_FILE_DIRECTORY_PATH}/',
             QIcon(resource_path('./icons/csv-file.png'))
         )
 
@@ -70,12 +70,12 @@ class FramelessMainWindow(QMainWindow):
         self.input_fields_layout = QHBoxLayout()
 
         # First Row Input
-        self.first_row_input_field, self.first_row_layout = create_labeled_input("First Row:", "2")
+        self.first_row_input_field, self.first_row_layout = create_labeled_input('First Row:', '1')
 
         self.input_fields_layout.addLayout(self.first_row_layout)
 
         # Last Row Input
-        self.last_row_input_field, self.last_row_layout = create_labeled_input("Last Row (optional):", "")
+        self.last_row_input_field, self.last_row_layout = create_labeled_input('Last Row (optional):', '')
         self.input_fields_layout.addLayout(self.last_row_layout)
 
         self.content_layout.addLayout(self.input_fields_layout)
@@ -96,7 +96,7 @@ class FramelessMainWindow(QMainWindow):
         self.process_button.setStyleSheet(get_process_button_style())
 
     def create_process_button(self):
-        button = QPushButton("Run Processing")
+        button = QPushButton('Run Processing')
         button.clicked.connect(self.run_processing)
         return button
 
