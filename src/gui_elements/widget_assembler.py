@@ -4,7 +4,9 @@ from subprocess import Popen
 
 from PySide6.QtWidgets import (QHBoxLayout, QPushButton, QLabel, QLineEdit)
 
+import src.config.constants as cts
 from src.gui_elements.confirmation_dialog import ConfirmationDialog
+from src.processor.process_import import import_csv
 from src.utils.utils import user_directory_path
 
 
@@ -41,4 +43,12 @@ def create_directory_button(button_text, directory_path, icon):
     button.clicked.connect(lambda: open_directory(directory_path))
     button.setToolTip(button_text)
     button.setIcon(icon)
+    return button
+
+
+def create_import_button(main_window):
+    button = QPushButton(cts.IMPORT_CSV_BUTTON_NAME, main_window)
+    button.setStyleSheet(f"color: {cts.BUTTON_TEXT_COLOR};")
+    button.setToolTip(cts.IMPORT_CSV_BUTTON_NAME)
+    button.clicked.connect(lambda: import_csv(main_window))
     return button

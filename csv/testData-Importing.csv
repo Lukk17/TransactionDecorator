@@ -1,0 +1,41 @@
+mBank S.A. Bankowość Detaliczna;
+		Skrytka Pocztowa 2108;
+		90-959 Łódź 2;
+		www.mBank.pl;
+		mLinia: 801 300 800;
+		+48 (42) 6 300 800;
+
+
+#Klient;
+ŁUKASZ SARNA;
+
+Lista operacji;
+
+#Za okres:;
+23.01.2023;23.01.2024;
+
+#zgodnie z wybranymi filtrami wyszukiwania;
+      #dla rachunków:;
+      eKonto - 20114020040000310280178052;
+
+      #Lista nie jest dokumentem w rozumieniu art. 7 Ustawy Prawo Bankowe (Dz. U. Nr 140 z 1997 roku, poz.939 z późniejszymi zmianami), ponieważ operacje można samodzielnie edytować.;
+
+      #Waluta;#Wpływy;#Wydatki;
+PLN;85 878,98;-86 742,81;
+
+Kryteria transakcji : Okres : 01-01-2024 - 23-01-2024;Typ transakcji: Uznania/Obci¹¿enia,;Produkty: 20249000050000400039037040 ; 31249010440000420065592618 ; 64249000050000400047951712 ; 84249000050000400072867451,
+
+#Data operacji;Wallet;Category name;#Kwota;Currency;Szczegó³y transakcji;Labels;Author;
+12.10.2023 20:44;MyWallet;Shopping;-99.0;PLN;BLIK - p?atno?? w internecie [GOGcomECOM];;Lukk
+11.10.2023 20:44;MyWallet;Salary;1000.0;PLN;Przelew ?rodków zabka;;Lukk
+2023-10-13T10:00:00+00:00;MyWallet;Income;400.00000000;PLN;Przelew na telefon BLIK, PL94109028510000000148599703, EGO 5/83 02-112 WARSZAWA;;Lukk
+2023-10-13T12:10:02+00:00;MyWallet;Expense;75;;Transakcja kartą debetową, UBER *TRIP, UBER *TRIP;;
+2023-10-13T21:15:00+00:00;MyWallet;;500000;;ALLEGRO PAY SP. Z O.O. UL. aaaa 1B 61-569 POZNAŃ PL, aliexpress Zwrot Allegro Pay 11123344  ALLEGRO PAY SP. Z O.O.             UL. aaaa 1B                61-569 POZNAŃ PL;;
+21-01-2024;;;-19,99;;HBO MAX Prague CZE;;
+20-01-2024;;;-29,99;;LIDL 1572 Warszawa PL;;
+2023-10-20;;Wpływy - inne;59,00;; UL. aaaa 1B 61-569 POZNAŃ PL, reserved  12223334  ALLEGRO PAY SP. Z O.O.             UL. aaaa 1B                61-569 POZNAŃ PL                                                       PRZELEW WEWNĘTRZNY PRZYCHODZĄCY                                                   1222233344455  ;;
+12-01-2024;;;-13;;sephora 1572 Warszawa PL;;
+13-01-2024;;;-13,99;;centrum ogrodnicze 1572 Warszawa PL;;
+14-01-2024;;;-13,00;;Orlen 1572 Warszawa PL;;
+14-01-2024;;;-130,99;;smolna 1572 Warszawa PL;;
+14-01-2024;;;-15,99;;nocny targ 1572 Warszawa PL;;

@@ -1,6 +1,7 @@
 import json
 import os
 import shutil
+import traceback
 from datetime import datetime
 
 import pandas as pd
@@ -15,10 +16,7 @@ def normalize_string(s):
     if not isinstance(s, str):
         s = str(s)
     s = s.strip()
-    replacements = {
-        'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n',
-        'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
-    }
+    replacements = cts.CHARACTERS_NORMALIZATION_MAP
     for original, replacement in replacements.items():
         s = s.replace(original, replacement)
     return ' '.join(s.split()).lower()
@@ -28,14 +26,14 @@ def create_backup(original_file_path, backup_dir):
     print("Creating backup of CSV file..")
     if not os.path.exists(backup_dir):
         os.makedirs(backup_dir)
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    timestamp = datetime.now().strftime(cts.BACKUP_TIMESTAMP_FORMAT)
     backup_file_path = os.path.join(backup_dir, f"{os.path.basename(original_file_path)}_{timestamp}.csv")
     shutil.copy(original_file_path, backup_file_path)
 
 
 def load_dictionary(dictionary_path):
     print("Loading dictionary json..")
-    with open(dictionary_path, 'r', encoding='utf-8') as file:
+    with open(dictionary_path, 'r', encoding=('%s' % cts.DEFAULT_ENCODING)) as file:
         dictionary_data = json.load(file)
     print("Normalize dictionary keys to lowercase")
     normalized_dictionary = {normalize_string(key): value for key, value in dictionary_data.items()}
@@ -44,10 +42,9 @@ def load_dictionary(dictionary_path):
 
 
 def update_labels(df, dictionary, first_row, last_row):
-    print("ProcessING labels if the '%s' column is not NaN" % cts.LABELS_COLUMN)
+    print("Processing labels if the '%s' column is not NaN" % cts.LABELS_COLUMN)
     for i in range(first_row - 1, min(last_row, len(df))):
         note = normalize_string(df.loc[i, ('%s' % cts.NOTE_COLUMN)])
-        print(note)
         if pd.notna(df.loc[i, ('%s' % cts.LABELS_COLUMN)]):
             labels = df.loc[i, cts.LABELS_COLUMN].split(cts.CSV_DELIMITER)
             # Normalize labels for comparison but keep the original case for output
@@ -67,7 +64,7 @@ def update_labels(df, dictionary, first_row, last_row):
                         labels.append(value)  # Append the original case value
 
         # Joining the labels with a CSV_DELIMITER to save back to CSV
-        df.loc[i, cts.LABELS_COLUMN] = ';'.join(labels)
+        df.loc[i, cts.LABELS_COLUMN] = ','.join(labels)
 
 
 # by default, last_row is set to '0' to process the whole file
@@ -78,7 +75,7 @@ def process_transactions(first_row=1, last_row=None):
         first_row = max(int(first_row), 1)
 
         # Define paths relative to the script file
-        dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.DICTIONARY_NAME}')
+        dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.LABELS_DICTIONARY_NAME}')
         csv_path = user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}/{cts.TRANSACTION_CSV_NAME}')
         backup_dir = user_directory_path(f'{cts.FILE_BACKUP_DIRECTORY_PATH}/')
 
@@ -94,15 +91,17 @@ def process_transactions(first_row=1, last_row=None):
             df.to_csv(csv_path, sep=('%s' % cts.CSV_DELIMITER), index=False)
 
         except pd.errors.ParserError as e:
-            print(f"Error parsing CSV file in line: {e}")
-            return False, f"Error parsing CSV file in line: {e}"
+            print(f"{cts.ERROR_PARSING_CSV} {e}")
+            traceback.print_exc()
+            return False, f"{cts.ERROR_PARSING_CSV} {e}"
 
         print("Processing finished.")
-        return True, "Processing completed successfully."
+        return True, ("%s" % cts.COMPLETED_SUCCESSFULLY_MESSAGE)
 
     except Exception as e:
-        print(f"Error parsing CSV file in line: {e}")
-        return False, f"Error parsing CSV file in line: {e}"
+        print(f"{cts.ERROR_PARSING_CSV} {e}")
+        traceback.print_exc()
+        return False, f"{cts.ERROR_PARSING_CSV} {e}"
 
 
 if __name__ == "__main__":

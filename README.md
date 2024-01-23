@@ -20,6 +20,18 @@ You can find ones for:
  * building Windows installer by Inno Setup
 
 -------------------------
+## Importing CSV
+
+To import CSV, click the button "Import CSV".   
+Remember that:
+ * CSV file needs to be in UTF-8 encoding and can't have any description lines at the beginning   
+   (often bank export csv have in first line some data about exporting which make file not valid CSV).  
+ * Columns count should be correct.  
+ * All rows should have same number of columns (delimiters) as first, header row with column names.  
+
+CSV will be parsed, a date format will be parsed to default one, and rows will be inserted at the end of the file.
+
+-------------------------
 
 ## Installing on Windows
 

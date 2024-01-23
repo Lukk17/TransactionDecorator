@@ -1,3 +1,3 @@
 Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author
-12.10.2023 20:44;Alior-manual;Expense;Shopping;-99.0;PLN;pizza;;Lukk
-10.10.2023 20:44;Alior-manual;Expense;Food;-46.03;PLN;Wolt Warszawa PL ;;Lukk Sarna
+12.10.2023 20:44;Alior-manual;Expense;Shopping;-99.0;PLN;pizza;eatingOut;Lukk
+10.10.2023 20:44;Alior-manual;Expense;Food;-46.03;PLN;Wolt Warszawa PL ;eatingOut;Lukk

@@ -46,7 +46,7 @@ def get_process_button_style():
             QPushButton {{
                 background-color: {cts.PROCESS_BUTTON_BACKGROUND_COLOR}; 
                 border: none; 
-                color: white; 
+                color: {cts.PROCESS_BUTTON_TEXT_COLOR}; 
                 padding: 5px; 
             }}
             QPushButton:hover {{

@@ -7,6 +7,7 @@ from src.gui_elements.title_bar import TitleBar
 from src.gui_elements.widget_assembler import *
 from src.processor.process_transactions import *
 from src.utils.utils import resource_path
+import src.config.constants as cts
 
 
 class FramelessMainWindow(QMainWindow):
@@ -14,7 +15,7 @@ class FramelessMainWindow(QMainWindow):
         super().__init__()
         self.m_dragPosition = None
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
-        self.setWindowTitle("CSV Processing")
+        self.setWindowTitle("%s" % cts.MAIN_WINDOW_TITLE)
         self.setWindowIcon(QIcon(resource_path(cts.APP_ICON)))
 
         # Central Widget and Layouts
@@ -45,24 +46,27 @@ class FramelessMainWindow(QMainWindow):
         self.dir_buttons_layout = QHBoxLayout()
 
         self.dictionary_button = create_directory_button(
-            'Open Dictionary Directory',
+            '%s' % cts.DICTIONARY_DIRECTORY_BUTTON_NAME,
             f'{cts.DICTIONARY_DIRECTORY_PATH}/',
-            QIcon(resource_path('./icons/dictionary.png'))
+            QIcon(resource_path('%s' % cts.ICON_DICTIONARY_PATH))
         )
         self.backup_button = create_directory_button(
-            'Open Backup Directory',
+            '%s' % cts.OPEN_BACKUP_DIRECTORY_BUTTON_NAME,
             f'{cts.FILE_BACKUP_DIRECTORY_PATH}/',
-            QIcon(resource_path('./icons/file-backup.png'))
+            QIcon(resource_path('%s' % cts.ICON_BACKUP_PATH))
         )
         self.csv_button = create_directory_button(
-            'Open CSV Directory',
+            '%s' % cts.CSV_DIRECTORY_BUTTON_NAME,
             f'{cts.CSV_FILE_DIRECTORY_PATH}/',
-            QIcon(resource_path('./icons/csv-file.png'))
+            QIcon(resource_path('%s' % cts.ICON_CSV_PATH))
         )
+
+        self.import_csv_button = create_import_button(self)
 
         self.dir_buttons_layout.addWidget(self.dictionary_button)
         self.dir_buttons_layout.addWidget(self.backup_button)
         self.dir_buttons_layout.addWidget(self.csv_button)
+        self.dir_buttons_layout.addWidget(self.import_csv_button)
 
         self.content_layout.addLayout(self.dir_buttons_layout)
 
@@ -70,12 +74,12 @@ class FramelessMainWindow(QMainWindow):
         self.input_fields_layout = QHBoxLayout()
 
         # First Row Input
-        self.first_row_input_field, self.first_row_layout = create_labeled_input('First Row:', '1')
+        self.first_row_input_field, self.first_row_layout = create_labeled_input('%s' % cts.FIRST_ROW_LABEL, '1')
 
         self.input_fields_layout.addLayout(self.first_row_layout)
 
         # Last Row Input
-        self.last_row_input_field, self.last_row_layout = create_labeled_input('Last Row (optional):', '')
+        self.last_row_input_field, self.last_row_layout = create_labeled_input('%s' % cts.LAST_ROW_LABEL, '')
         self.input_fields_layout.addLayout(self.last_row_layout)
 
         self.content_layout.addLayout(self.input_fields_layout)
@@ -96,7 +100,7 @@ class FramelessMainWindow(QMainWindow):
         self.process_button.setStyleSheet(get_process_button_style())
 
     def create_process_button(self):
-        button = QPushButton('Run Processing')
+        button = QPushButton('%s' % cts.RUN_PROCESSING_BUTTON_NAME)
         button.clicked.connect(self.run_processing)
         return button
 
