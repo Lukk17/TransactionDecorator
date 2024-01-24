@@ -5,7 +5,7 @@ from datetime import datetime
 import chardet
 import numpy as np
 import pandas as pd
-from PySide6.QtWidgets import (QFileDialog)
+from PySide6.QtWidgets import (QFileDialog, QInputDialog)
 
 import src.config.constants as cts
 from src.utils.utils import user_directory_path
@@ -14,15 +14,19 @@ from src.utils.utils import user_directory_path
 def import_csv(main_window):
     # Import moved here due to circular import issue when imported as global one
     from src.gui_elements.widget_assembler import create_pop_up
+    from src.gui_elements.widget_assembler import create_input_dialog
 
     file_name, _ = QFileDialog.getOpenFileName(main_window, "%s" % cts.OPEN_CSV_DIALOG_WINDOW_NAME, "",
                                                "%s" % cts.OPEN_CSV_DIALOG_DEFAULT_FILE_FORMAT)
     if file_name:
-        is_success, message = process_imported_csv(file_name)
-        create_pop_up(is_success, message)
+        delimiter, ok = create_input_dialog(main_window)
+
+        if ok and delimiter:
+            is_success, message = process_imported_csv(file_name, delimiter)
+            create_pop_up(is_success, message)
 
 
-def process_imported_csv(imported_csv_file_name):
+def process_imported_csv(imported_csv_file_name, delimiter):
     print("Starting importing...")
     try:
         # for printing full csv:
@@ -54,7 +58,8 @@ def process_imported_csv(imported_csv_file_name):
             if rows_to_skip > 0:
                 print(f'Skipping first {rows_to_skip} lines due to not parsable content..')
 
-            imported_csv = pd.read_csv(imported_csv_file_name, delimiter=';', encoding=import_encoding, quotechar='"',
+            imported_csv = pd.read_csv(imported_csv_file_name, delimiter=delimiter, encoding=import_encoding,
+                                       quotechar='"',
                                        skiprows=rows_to_skip, index_col=False)
 
             print("Imported csv columns: ", imported_csv.columns)

@@ -11,8 +11,14 @@ CHARACTERS_NORMALIZATION_MAP = {
     'ą': 'a', 'ć': 'c', 'ę': 'e', 'ł': 'l', 'ń': 'n',
     'ó': 'o', 'ś': 's', 'ż': 'z', 'ź': 'z'
 }
+
+IMPORTING_DELIMITER_LABEL_TITLE = "Choose the CSV delimiter:"
+IMPORTING_DELIMITER_SELECTION_TITLE = "Select Delimiter"
+DELIMITERS_LIST = [";", ","]
+
 ERROR_PARSING_CSV = "Error parsing CSV file in line:"
-ERROR_IMPORTING_CSV = "Error importing CSV file in line:"
+ERROR_IMPORTING_CSV = ("There was error during parsing - try different delimiter when importing. "
+                       "\nError importing CSV file in line:")
 
 INPUT_DATE_FORMATS = [
     "%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%d.%m.%Y %H:%M", "%Y-%m-%dT%H:%M:%S+00:00",

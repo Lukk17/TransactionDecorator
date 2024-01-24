@@ -35,36 +35,64 @@ def load_dictionary(dictionary_path):
     print("Loading dictionary json..")
     with open(dictionary_path, 'r', encoding=('%s' % cts.DEFAULT_ENCODING)) as file:
         dictionary_data = json.load(file)
+
+    # The labeling dictionary is in a human-readable format where each label maps to a list of keywords.
+    # For efficient algorithm processing, keys and values need to be swapped.
+    inverted_dictionary = invert_dictionary(dictionary_data)
+
     print("Normalize dictionary keys to lowercase")
-    normalized_dictionary = {normalize_string(key): value for key, value in dictionary_data.items()}
+    normalized_dictionary = {normalize_string(key): value for key, value in inverted_dictionary.items()}
 
     return normalized_dictionary
+
+
+def invert_dictionary(dictionary_data):
+    inverted_dictionary = {}
+    for label, keys in dictionary_data.items():
+        for key in keys:
+            normalized_key = normalize_string(key)
+            if normalized_key not in inverted_dictionary:
+                inverted_dictionary[normalized_key] = []
+            normalized_label = normalize_string(label)
+            if normalized_label not in inverted_dictionary[normalized_key]:
+                inverted_dictionary[normalized_key].append(normalized_label)
+    return inverted_dictionary
 
 
 def update_labels(df, dictionary, first_row, last_row):
     print("Processing labels if the '%s' column is not NaN" % cts.LABELS_COLUMN)
     for i in range(first_row - 1, min(last_row, len(df))):
         note = normalize_string(df.loc[i, ('%s' % cts.NOTE_COLUMN)])
+        existing_labels = set()
+
         if pd.notna(df.loc[i, ('%s' % cts.LABELS_COLUMN)]):
             labels = df.loc[i, cts.LABELS_COLUMN].split(cts.CSV_DELIMITER)
-            # Normalize labels for comparison but keep the original case for output
-            normalized_labels = [normalize_string(label) for label in labels if label]
+            # Normalize labels for comparison and add to the set
+            existing_labels.update(normalize_string(label) for label in labels if label)
         else:
             labels = []
-            normalized_labels = []
 
-        for key, values in dictionary.items():
+        for key, labels_list in dictionary.items():
             # Normalize the key for case-insensitive comparison
             normalized_key = normalize_string(key)
 
             if normalized_key in note:
-                for value in values.split(cts.LABELS_DELIMITER):
+                for value in labels_list:
+                    normalized_value = normalize_string(value)
                     # Check if the value, in a normalized form, is not already in labels
-                    if normalize_string(value) not in normalized_labels:
+                    if normalized_value not in existing_labels:
                         labels.append(value)  # Append the original case value
+                        existing_labels.add(normalized_value)  # Add to set to prevent duplicates
 
         # Joining the labels with a CSV_DELIMITER to save back to CSV
-        df.loc[i, cts.LABELS_COLUMN] = ','.join(labels)
+        df.loc[i, cts.LABELS_COLUMN] = cts.LABELS_DELIMITER.join(labels)
+
+
+def replace_multiple_whitespaces(df):
+    for column in df.columns:
+        if df[column].dtype == object:  # Check if the column is of string type
+            df[column] = df[column].apply(lambda x: ' '.join(x.split()) if isinstance(x, str) else x)
+    return df
 
 
 # by default, last_row is set to '0' to process the whole file
@@ -84,6 +112,8 @@ def process_transactions(first_row=1, last_row=None):
 
         try:
             df = pd.read_csv(csv_path, delimiter=cts.CSV_DELIMITER)
+            df = replace_multiple_whitespaces(df)
+
             if last_row is None or last_row > len(df):
                 last_row = len(df)
 
