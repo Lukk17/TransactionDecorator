@@ -1,6 +1,6 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout)
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QCheckBox)
 
 from src.config.style_config import get_app_style, get_process_button_style
 from src.gui_elements.title_bar import TitleBar
@@ -84,6 +84,32 @@ class FramelessMainWindow(QMainWindow):
 
         self.content_layout.addLayout(self.input_fields_layout)
 
+        self.force_update_layout = QHBoxLayout()
+
+        self.force_update_categories_checkbox = QCheckBox("Force categories update")
+        self.force_update_labels_checkbox = QCheckBox("Force labels update")
+
+        checkbox_style = f"""
+            QCheckBox {{
+                background-color: {cts.CHECKBOX_BACKGROUND_COLOR};
+                color: {cts.CHECKBOX_LABEL_TEXT_COLOR};
+            }}
+            QCheckBox::indicator {{
+                background-color: {cts.CHECKBOX_NOT_PRESSED_COLOR};
+            }}
+            QCheckBox::indicator:checked {{
+                background-color: {cts.CHECKBOX_PRESSED_COLOR};
+            }}
+        """
+
+        self.force_update_categories_checkbox.setStyleSheet(checkbox_style)
+        self.force_update_labels_checkbox.setStyleSheet(checkbox_style)
+
+        self.force_update_layout.addWidget(self.force_update_categories_checkbox)
+        self.force_update_layout.addWidget(self.force_update_labels_checkbox)
+
+        self.content_layout.addLayout(self.force_update_layout)
+
         # Process Button
         self.process_button = self.create_process_button()
         self.content_layout.addWidget(self.process_button)
@@ -107,7 +133,12 @@ class FramelessMainWindow(QMainWindow):
     def run_processing(self):
         first_row = int(self.first_row_input_field.text())
         last_row = int(self.last_row_input_field.text()) if self.last_row_input_field.text() else None
-        is_success, message = process_transactions(first_row, last_row)
+
+        update_existing_categories = self.force_update_categories_checkbox.isChecked()
+        update_existing_labels = self.force_update_labels_checkbox.isChecked()
+
+        is_success, message = process_transactions(first_row, last_row,
+                                                   update_existing_categories, update_existing_labels)
         create_pop_up(is_success, message)
 
         if is_success:

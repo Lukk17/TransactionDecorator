@@ -33,11 +33,25 @@ CSV will be parsed, a date format will be parsed to default one, and rows will b
 
 -------------------------
 
+## Running unit tests
+
+```shell
+python -m unittest discover -s test
+```
+
+-------------------------
+
 ## Installing on Windows
 
 ### Installing required packages into PyInstaller:
+As ADMIN (terminal)
 ```shell
 pip install -r ./src/requirements.txt
+```
+
+To create requirements with a current python local installation type:
+```shell
+pip freeze > requirements.txt
 ```
 
 ### Creating Windows `.exe` file:

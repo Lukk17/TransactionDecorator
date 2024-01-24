@@ -5,7 +5,7 @@ from datetime import datetime
 import chardet
 import numpy as np
 import pandas as pd
-from PySide6.QtWidgets import (QFileDialog, QInputDialog)
+from PySide6.QtWidgets import (QFileDialog)
 
 import src.config.constants as cts
 from src.utils.utils import user_directory_path
