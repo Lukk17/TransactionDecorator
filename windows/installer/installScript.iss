@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TransactionDecorator"
-#define MyAppVersion "0.0.1"
+#define MyAppVersion "0.1.0"
 #define MyAppPublisher "Lukk"
 #define MyAppURL "luksarna.com"
 #define MyAppExeName "TransactionDecorator.exe"
