@@ -27,7 +27,7 @@ Remember that:
  * CSV file needs to be in UTF-8 encoding and can't have any description lines at the beginning   
    (often bank export csv have in first line some data about exporting which make file not valid CSV).  
  * Columns count should be correct.  
- * All rows should have same number of columns (delimiters) as first, header row with column names.  
+ * All rows should have the same number of columns (delimiters) as first, header row with column names.  
 
 CSV will be parsed, a date format will be parsed to default one, and rows will be inserted at the end of the file.
 
@@ -57,6 +57,14 @@ pip freeze > requirements.txt
 ### Creating Windows `.exe` file:
 
 The Terminal needs to be in the main project directory (for an app icon relative path to work)
+
+```shell
+pyinstaller --distpath "windows/entrypoint/" TransactionDecorator.spec
+
+```
+
+Alternative: using this will compile but ignore `TransactionDecorator.spec` recreating it with blank values.  
+There can be problems with lack of some library. 
 ```powershell
 pyinstaller --noconsole --onefile --name "TransactionDecorator" --icon "./icons/logo.ico" --distpath "windows/entrypoint/" src/gui.py
 ```
@@ -97,39 +105,87 @@ InstallFolder/
 ```text
 <userHome>/AppData/Roaming/TransactionDecorator folder
 ├── backup/                                                 # Directory for backup-related files
-│   └── allTransactions.csv_20231129234112.csv                  # Example file in backup directory
+│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
 │
 ├── csv/                                                    # Directory for CSV files
 │   └── allTransactions.csv                                     # Example CSV file
 │
 ├── dictionary/                                             # Directory for dictionary-related files
-│   └── labels-dictionary.json                                  # Example dictionary file
+│   ├── categories-dictionary.json                               # Categories dictionary file
+│   ├── import-dictionary.json                                   # Import dictionary file
+│   └── labels-dictionary.json                                   # Labels dictionary file
 ```
 
 ## Structure for development
 ```text
 /Project main folder
-│
-├── src
-│   └── gui.py                                              # Main python script - launch app via it
-│
 ├── backup/                                                 # Directory for backup-related files
-│   └── allTransactions.csv_20231129234112.csv                  # Example file in backup directory
+│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
 │
 ├── csv/                                                    # Directory for CSV files
 │   └── allTransactions.csv                                     # Example CSV file
 │
 ├── dictionary/                                             # Directory for dictionary-related files
-│   └── dictionary.json                                         # Example dictionary file
+│   └── categories-dictionary.json                               # Categories dictionary file
+│   └── import-dictionary.json                                   # Import dictionary file
+│   └── labels-dictionary.json                                   # Labels dictionary file
 │
-└── icons/                                                  # Directory for icon files
-    ├── logo.ico                                                # Main icon file
-    ├── logo.png
-    ├── close.png                                               # Icon for GUI
-    ├── csv-file.png                                            # Icon for GUI
-    ├── dictionary.png                                          # Icon for GUI
-    ├── file-backup.png                                         # Icon for GUI
-    ├── maximize.png                                            # Icon for GUI
-    ├── minimize.png                                            # Icon for GUI
-    └── restore.png     
+├── icons/                                                  # Directory for icon files
+│   ├── logo.ico                                                # Main icon file
+│   ├── logo.png
+│   ├── close.png                                               # Icon for GUI
+│   ├── csv-file.png                                            # Icon for GUI
+│   ├── dictionary.png                                          # Icon for GUI
+│   ├── file-backup.png                                         # Icon for GUI
+│   ├── maximize.png                                            # Icon for GUI
+│   ├── minimize.png                                            # Icon for GUI
+│   └── restore.png     
+│
+├── src/
+│   ├── gui.py                                              # Main python script - launch app via it
+│   ├── requirements.txt                                    # Python library requirements need project to work
+│   ├── config/                                              
+│   │    ├── constants.py                                              
+│   │    └── style_config.py
+│   ├── gui_elements/    
+│   │    ├── confirmation_dialog.py                                                                                  
+│   │    ├── title_bar.py                                                                                      
+│   │    └── widget_assembler.py  
+│   ├── processor/    
+│   │    ├── process_import.py                                                                                                                                                                      
+│   │    └── process_transactions.py       
+│   └── utils/      
+│        └── utils.py                                                                                                                                                                                                                                                                                                                              
+│
+├── windows/
+│   ├── entrypoint                                           # Folder for generating TransactionDecorator.exe file
+│        └── [generated] TransactionDecorator.exe            # Generated by PyInstaller                                                                                                                                                                                                                                                                                                                
+│   └── installer                                              
+│        ├── installScript.iss                               # Inno Setup script for compiling windows installer                                                                                                                                                                                                                                                                                             
+│        └── [generated] TransactionDecoratorInstaller.exe   # Windows Installer                                                                                                                                                                                                                                                                                                                       
+│
+├── .gitignore                                                
+│
+├── README.md                                                # This file
+│
+└── TransactionDecorator.spec                                # Specification file for PyInstaller 
 ```
+-------------------------
+
+## Troubleshooter
+
+1. Lack of a library in exe file  
+   If when launched .exe file with app error occurs that there is lack of any python library,  
+   edit `TransactionDecorator.spec` file and add a missing library to `hiddenimports=['chardet'],` section.  
+   Then run:  
+   as ADMIN
+   ```shell
+      pip install --upgrade pyinstaller <library_name>
+   ```
+   as NORMAL user
+   where `<library_name` is for example `chardet`
+   ```shell
+      pyinstaller TransactionDecorator.spec
+   ```
+   And now try again to compile pyinstaller.
+2. 

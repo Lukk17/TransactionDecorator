@@ -68,7 +68,6 @@ def update_categories(df, categories_dictionary, first_row, last_row, update_exi
 
         if (not update_existing_categories and not is_category_empty
                 and existing_category and existing_category.lower() != 'other'):
-
             print("Skip this line")
             continue
 
@@ -112,7 +111,8 @@ def update_labels(df, dictionary, first_row, last_row, update_existing_labels=Fa
             # Normalize the key for case-insensitive comparison
             normalized_key = normalize_string(key)
             if normalized_key in note:
-                add_label_if_new(existing_labels, labels, labels_list, update_existing_labels, first_update)
+                first_update = add_label_if_new(existing_labels, labels, labels_list, update_existing_labels,
+                                                first_update)
 
         # Joining the labels with a CSV_DELIMITER to save back to CSV
         df.loc[i, cts.LABELS_COLUMN] = cts.LABELS_DELIMITER.join(labels)
@@ -141,6 +141,9 @@ def add_label_if_new(existing_labels, labels, labels_list, update_existing_label
                 first_update = False
             labels.append(value)  # Append the original case value
             existing_labels.add(normalized_value)  # Add to set to prevent duplicates
+    # Returning the updated value of first_update because:
+    # in Python, when you pass a primitive data type (like a boolean) to a function, it is passed by value.
+    return first_update
 
 
 def replace_multiple_whitespaces(df):

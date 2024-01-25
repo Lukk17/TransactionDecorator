@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "..\entrypoint\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\csv\allTransactions.csv"; DestDir: "{userappdata}\{#MyAppName}\csv"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\..\csv\allTransactions.csv"; DestDir: "{userappdata}\{#MyAppName}\csv"; Flags: ignoreversion
 Source: "..\..\dictionary\*"; DestDir: "{userappdata}\{#MyAppName}\dictionary"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\icons\*"; DestDir: "{app}\icons"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
