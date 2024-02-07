@@ -1,9 +1,9 @@
-Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author;
-12.10.2023 20:44;Alior-manual;;;-99.0;PLN;pizza;;Lukk
-10.10.2023 20:44;Alior-manual;;;-46.03;PLN;Wolt Warszawa PL ;;Lukk
-12.10.2023 20:44;MyWallet;;;-99.0;PLN;booking.com;;Lukk
-11.10.2023 20:44;MyWallet;;;1000.0;PLN;reserved;;Lukk
-13.10.2023 10:00;MyWallet;;;400.00000000;PLN;       , PL933333285222229703,  5/83 02-112 WARSZAWA;;Lukk
+Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author
+12.10.2023 20:44;Alior-manual;;;-99,0;PLN;pizza;;Lukk
+10.10.2023 20:44;Alior-manual;;;-46,03;PLN;Wolt Warszawa PL ;;Lukk
+12.10.2023 20:44;MyWallet;;;-99,0;PLN;booking.com;;Lukk
+11.10.2023 20:44;MyWallet;;;1000,0;PLN;reserved;taxi;Lukk
+13.10.2023 10:00;MyWallet;;;40000000000;PLN;       , PL933333285222229703,  5/83 02-112 WARSZAWA;;Lukk
 13.10.2023 12:10;MyWallet;;;75;;Transakcja kartą debetową, UBER *TRIP, UBER *TRIP;;
 13.10.2023 21:15;MyWallet;;;500000;;ALLEGRO PAY SP. Z O.O. UL. aaaa 1B 61-569 POZNAŃ PL, aliexpress Zwrot Allegro Pay 11123344  ALLEGRO PAY SP. Z O.O.             UL. aaaa 1B                61-569 POZNAŃ PL;;
 21.01.2024 00:00;;;;-19,99;;netflix MAX Prague CZE;;
@@ -17,3 +17,12 @@ Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author;
 17.06.2024 00:00;;;;-15,99;;HBO netflix bp orlen ;;
 17.06.2024 00:00;;;;-15,99;;cashback ;;
 17.06.2024 00:00;;;WrongCategory;-15,99;;orlen ;wrongLabel;
+06.02.2024 00:00;;;Transport;-22,99;;UBER *TRIP HELP.UBER.COM NLD;taxi;
+05.02.2024 00:00;;;;-361,00;;Przelew na telefon BLIK;;
+05.02.2024 00:00;;;;-3061,00;;Przelew na telefon BLIK;;
+05.02.2024 00:00;;;;-3061,00;;Przelew na telefon BLIK;;
+04.02.2024 00:00;;;Google;-10,00;;"SKLEP ""HIPCIA"" Warszawa PL";grocery,cornershop;
+11.01.2024 00:00;;;;-38,00;;NORTH FISH WOLA PARK Warszawa PL;;
+03.02.2024 00:00;;;;-24,14;;UBER *TRIP HELP.UBER.COM NLD;;
+02.02.2024 00:00;;;;54,96;;Allegro Poznan PL;;
+02.02.2024 00:00;;;;-63,40;;UBER *EATS HELP.UBER.COM NLD;;

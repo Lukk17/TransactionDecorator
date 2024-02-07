@@ -53,3 +53,54 @@ def get_process_button_style():
                 background-color: {cts.PROCESS_BUTTON_HOVER_COLOR}; 
             }}
         """
+
+
+def get_checkbox_style():
+    return f"""
+            QCheckBox {{
+                background-color: {cts.CHECKBOX_BACKGROUND_COLOR};
+                color: {cts.CHECKBOX_LABEL_TEXT_COLOR};
+            }}
+            QCheckBox::indicator {{
+                background-color: {cts.CHECKBOX_NOT_PRESSED_COLOR};
+            }}
+            QCheckBox::indicator:checked {{
+                background-color: {cts.CHECKBOX_PRESSED_COLOR};
+            }}
+        """
+
+
+def get_import_dialog_style():
+    return f"""
+            QDialog {{ 
+                background-color: {cts.BACKGROUND_COLOR}; 
+                color: {cts.BUTTON_TEXT_COLOR};
+            }}
+            QLabel {{ color: {cts.BUTTON_TEXT_COLOR}; }}
+            QPushButton {{ 
+                background-color: {cts.BUTTON_BACKGROUND_COLOR}; 
+                color: {cts.BUTTON_TEXT_COLOR}; 
+            }}
+            QPushButton:hover {{ background-color: {cts.BUTTON_HOVER_COLOR}; }}
+            QPushButton:pressed {{ background-color: {cts.BUTTON_PRESSED_COLOR}; }}
+            QComboBox {{ 
+                background-color: {cts.BACKGROUND_COLOR}; 
+                color: {cts.BUTTON_TEXT_COLOR}; 
+            }}
+            QComboBox QAbstractItemView {{ 
+                background-color: {cts.BACKGROUND_COLOR}; 
+                color: {cts.BUTTON_TEXT_COLOR}; 
+            }}
+            QComboBox:focus {{ border: none; }}
+            
+            QCheckBox {{
+                background-color: {cts.CHECKBOX_BACKGROUND_COLOR};
+                color: {cts.CHECKBOX_LABEL_TEXT_COLOR};
+            }}
+            QCheckBox::indicator {{
+                background-color: {cts.CHECKBOX_NOT_PRESSED_COLOR};
+            }}
+            QCheckBox::indicator:checked {{
+                background-color: {cts.CHECKBOX_PRESSED_COLOR};
+            }}
+        """

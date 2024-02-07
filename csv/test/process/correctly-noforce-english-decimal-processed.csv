@@ -1,5 +1,5 @@
 Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author
-17.06.2024 00:00;;;WrongCategory;-15.99;;orlen;paliwo;
+17.06.2024 00:00;;;WrongCategory;-15.99;;orlen;wrongLabel,paliwo;
 17.06.2024 00:00;;;Extra income;-15.99;;cashback;;
 17.06.2024 00:00;;;Car;-15.99;;HBO netflix bp orlen;paliwo,vod;
 06.02.2024 00:00;;;Transport;-22.99;;UBER *TRIP HELP.UBER.COM NLD;taxi;
@@ -24,5 +24,5 @@ Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author
 13.10.2023 10:00;MyWallet;;Other;40000000000;PLN;, PL933333285222229703, 5/83 02-112 WARSZAWA;;Lukk
 12.10.2023 20:44;MyWallet;;Travel;-99.0;PLN;booking.com;;Lukk
 12.10.2023 20:44;Alior-manual;;Food;-99.0;PLN;pizza;eatingout;Lukk
-11.10.2023 20:44;MyWallet;;Shopping;1000.0;PLN;reserved;clothing;Lukk
+11.10.2023 20:44;MyWallet;;Shopping;1000.0;PLN;reserved;taxi,clothing;Lukk
 10.10.2023 20:44;Alior-manual;;Food;-46.03;PLN;Wolt Warszawa PL;eatingout;Lukk

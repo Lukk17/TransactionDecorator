@@ -1,13 +1,10 @@
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget, QVBoxLayout, QCheckBox)
+from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget)
 
 from src.config.style_config import get_app_style, get_process_button_style
 from src.gui_elements.title_bar import TitleBar
 from src.gui_elements.widget_assembler import *
 from src.processor.process_transactions import *
 from src.utils.utils import resource_path
-import src.config.constants as cts
 
 
 class FramelessMainWindow(QMainWindow):
@@ -43,30 +40,7 @@ class FramelessMainWindow(QMainWindow):
         self.content_layout = QVBoxLayout(self.content_widget)
 
         # Directory Buttons
-        self.dir_buttons_layout = QHBoxLayout()
-
-        self.dictionary_button = create_directory_button(
-            '%s' % cts.DICTIONARY_DIRECTORY_BUTTON_NAME,
-            f'{cts.DICTIONARY_DIRECTORY_PATH}/',
-            QIcon(resource_path('%s' % cts.ICON_DICTIONARY_PATH))
-        )
-        self.backup_button = create_directory_button(
-            '%s' % cts.OPEN_BACKUP_DIRECTORY_BUTTON_NAME,
-            f'{cts.FILE_BACKUP_DIRECTORY_PATH}/',
-            QIcon(resource_path('%s' % cts.ICON_BACKUP_PATH))
-        )
-        self.csv_button = create_directory_button(
-            '%s' % cts.CSV_DIRECTORY_BUTTON_NAME,
-            f'{cts.CSV_FILE_DIRECTORY_PATH}/',
-            QIcon(resource_path('%s' % cts.ICON_CSV_PATH))
-        )
-
-        self.import_csv_button = create_import_button(self)
-
-        self.dir_buttons_layout.addWidget(self.dictionary_button)
-        self.dir_buttons_layout.addWidget(self.backup_button)
-        self.dir_buttons_layout.addWidget(self.csv_button)
-        self.dir_buttons_layout.addWidget(self.import_csv_button)
+        self.dir_buttons_layout, self.csv_button = create_dir_buttons(self)
 
         self.content_layout.addLayout(self.dir_buttons_layout)
 
@@ -84,31 +58,15 @@ class FramelessMainWindow(QMainWindow):
 
         self.content_layout.addLayout(self.input_fields_layout)
 
-        self.force_update_layout = QHBoxLayout()
+        (self.english_decimal_separator_layout,
+         self.english_decimal_separator_checkbox) = create_english_decimal_separator(self)
 
-        self.force_update_categories_checkbox = QCheckBox("Force categories update")
-        self.force_update_labels_checkbox = QCheckBox("Force labels update")
-
-        checkbox_style = f"""
-            QCheckBox {{
-                background-color: {cts.CHECKBOX_BACKGROUND_COLOR};
-                color: {cts.CHECKBOX_LABEL_TEXT_COLOR};
-            }}
-            QCheckBox::indicator {{
-                background-color: {cts.CHECKBOX_NOT_PRESSED_COLOR};
-            }}
-            QCheckBox::indicator:checked {{
-                background-color: {cts.CHECKBOX_PRESSED_COLOR};
-            }}
-        """
-
-        self.force_update_categories_checkbox.setStyleSheet(checkbox_style)
-        self.force_update_labels_checkbox.setStyleSheet(checkbox_style)
-
-        self.force_update_layout.addWidget(self.force_update_categories_checkbox)
-        self.force_update_layout.addWidget(self.force_update_labels_checkbox)
+        (self.force_update_layout,
+         self.force_update_categories_checkbox,
+         self.force_update_labels_checkbox) = create_force_update(self)
 
         self.content_layout.addLayout(self.force_update_layout)
+        self.content_layout.addLayout(self.english_decimal_separator_layout)
 
         # Process Button
         self.process_button = self.create_process_button()
@@ -136,9 +94,13 @@ class FramelessMainWindow(QMainWindow):
 
         update_existing_categories = self.force_update_categories_checkbox.isChecked()
         update_existing_labels = self.force_update_labels_checkbox.isChecked()
+        english_decimal_separator = self.english_decimal_separator_checkbox.isChecked()
 
-        is_success, message = process_transactions(first_row, last_row,
-                                                   update_existing_categories, update_existing_labels)
+        is_success, message = process_transactions(first_row=first_row, last_row=last_row,
+                                                   update_existing_categories=update_existing_categories,
+                                                   update_existing_labels=update_existing_labels,
+                                                   english_decimal_separator=english_decimal_separator
+                                                   )
         create_pop_up(is_success, message)
 
         if is_success:

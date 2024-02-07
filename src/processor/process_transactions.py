@@ -7,7 +7,7 @@ from datetime import datetime
 import pandas as pd
 
 import src.config.constants as cts
-from src.utils.utils import user_directory_path
+from src.utils.utils import user_directory_path, normalize_number_format
 
 
 def normalize_string(s):
@@ -80,7 +80,12 @@ def update_categories(df, categories_dictionary, first_row, last_row, update_exi
                 category_assigned = True
                 break
 
-        if not category_assigned and not update_existing_categories:
+        newly_added_category = find_existing_category(df, i)
+        is_category_still_empty = (pd.isna(newly_added_category)
+                                   or newly_added_category in [None, 'nan', '']
+                                   or newly_added_category.strip() == '')
+
+        if not category_assigned and (not update_existing_categories or is_category_still_empty):
             df.loc[i, cts.CATEGORIES_COLUMN] = 'Other'
 
     print("Updating categories finished.")
@@ -122,7 +127,8 @@ def update_labels(df, dictionary, first_row, last_row, update_existing_labels=Fa
 
 def extract_existing_labels(df, existing_labels, row_number):
     if pd.notna(df.loc[row_number, ('%s' % cts.LABELS_COLUMN)]):
-        labels = df.loc[row_number, cts.LABELS_COLUMN].split(cts.CSV_DELIMITER)
+        labels = df.loc[row_number, cts.LABELS_COLUMN].split(cts.LABELS_DELIMITER)
+
         # Normalize labels for comparison and add to the set
         existing_labels.update(normalize_string(label) for label in labels if label)
     else:
@@ -133,12 +139,14 @@ def extract_existing_labels(df, existing_labels, row_number):
 def add_label_if_new(existing_labels, labels, labels_list, update_existing_labels, first_update):
     for value in labels_list:
         normalized_value = normalize_string(value)
+
         # Check if the value, in a normalized form, is not already in labels
         if normalized_value not in existing_labels:
             if update_existing_labels and first_update:
                 labels.clear()
                 existing_labels.clear()
                 first_update = False
+
             labels.append(value)  # Append the original case value
             existing_labels.add(normalized_value)  # Add to set to prevent duplicates
     # Returning the updated value of first_update because:
@@ -153,8 +161,50 @@ def replace_multiple_whitespaces(df):
     return df
 
 
+def sort_dataframe_by_date(df):
+    """
+    Sorts the DataFrame by the date column from newest to oldest.
+
+    Parameters:
+    - df: pandas.DataFrame to sort.
+
+    Returns:
+    - Sorted pandas.DataFrame.
+    """
+    if cts.DATE_COLUMN in df.columns:
+        df[cts.DATE_COLUMN] = pd.to_datetime(df[cts.DATE_COLUMN], dayfirst=True)
+        df = df.sort_values(by=cts.DATE_COLUMN, ascending=False)
+
+        # Convert dates back to the specified output format
+        df[cts.DATE_COLUMN] = df[cts.DATE_COLUMN].dt.strftime(cts.OUTPUT_DATE_FORMAT)
+
+    else:
+        print(f"Warning: Date column '{cts.DATE_COLUMN}' not found in DataFrame.")
+    return df
+
+
+def convert_decimal_separator(df, column_name, english_decimal_separator=True):
+    """
+    Converts the decimal separator in the specified column of a DataFrame using updated logic
+    to handle mixed formats correctly.
+
+    Parameters:
+    - df: pandas.DataFrame containing the column to convert.
+    - column_name: The name of the column to convert.
+    - english_decimal_separator: If True, converts to a dot as the decimal separator. If False, uses a comma.
+    """
+    if column_name in df.columns:
+        df[column_name] = df[column_name].apply(
+            lambda x: normalize_number_format(x, english_decimal_separator) if isinstance(x, str) else x)
+    else:
+        print(f"Warning: Column '{column_name}' not found in DataFrame.")
+
+
 # by default, last_row is set to '0' to process the whole file
-def process_transactions(first_row=1, last_row=None, update_existing_categories=False, update_existing_labels=False):
+def process_transactions(first_row=1, last_row=None,
+                         update_existing_categories=False, update_existing_labels=False,
+                         english_decimal_separator=True
+                         ):
     print("Starting processing...")
     try:
         # If first_row is less than 1, set it to 1
@@ -181,6 +231,10 @@ def process_transactions(first_row=1, last_row=None, update_existing_categories=
 
             update_categories(df, categories_dictionary, first_row, last_row, update_existing_categories)
             update_labels(df, labels_dictionary, first_row, last_row, update_existing_labels)
+
+            df = sort_dataframe_by_date(df)
+            convert_decimal_separator(df, cts.AMOUNT_COLUMN, english_decimal_separator)
+
             df.to_csv(csv_path, sep=('%s' % cts.CSV_DELIMITER), index=False)
 
         except pd.errors.ParserError as e:

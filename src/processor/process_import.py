@@ -8,7 +8,7 @@ import pandas as pd
 from PySide6.QtWidgets import (QFileDialog)
 
 import src.config.constants as cts
-from src.utils.utils import user_directory_path
+from src.utils.utils import user_directory_path, normalize_number_format
 
 
 def import_csv(main_window):
@@ -19,14 +19,14 @@ def import_csv(main_window):
     file_name, _ = QFileDialog.getOpenFileName(main_window, "%s" % cts.OPEN_CSV_DIALOG_WINDOW_NAME, "",
                                                "%s" % cts.OPEN_CSV_DIALOG_DEFAULT_FILE_FORMAT)
     if file_name:
-        delimiter, ok = create_input_dialog(main_window)
+        delimiter, english_decimal_separator, ok = create_input_dialog(main_window)
 
         if ok and delimiter:
-            is_success, message = process_imported_csv(file_name, delimiter)
+            is_success, message = process_imported_csv(file_name, delimiter, english_decimal_separator)
             create_pop_up(is_success, message)
 
 
-def process_imported_csv(imported_csv_file_name, delimiter):
+def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_separator=True):
     print("Starting importing...")
     try:
         # for printing full csv:
@@ -70,11 +70,11 @@ def process_imported_csv(imported_csv_file_name, delimiter):
             column_indices = create_column_position_map(column_mapping, imported_csv)
             print("Column indices:", column_indices)
 
-            date_columns = column_mapping.get("Date", [])
-
             print("Creating new rows with imported cell values...")
             for _, imported_row in imported_csv.iterrows():
-                new_row = assign_imported_values_to_new_row(column_indices, date_columns, imported_row, original_csv)
+                new_row = assign_imported_values_to_new_row(column_indices, column_mapping,
+                                                            imported_row, original_csv, english_decimal_separator
+                                                            )
 
                 original_csv = append_new_row_to_original_csv(new_row, original_csv)
 
@@ -137,14 +137,24 @@ def append_new_row_to_original_csv(new_row, original_csv):
     return pd.concat([original_csv, pd.DataFrame([new_row])], ignore_index=True)
 
 
-def assign_imported_values_to_new_row(column_indices, date_columns, imported_row, original_csv):
+def assign_imported_values_to_new_row(column_indices, column_mapping,
+                                      imported_row, original_csv, english_decimal_separator):
+    date_columns = column_mapping.get("Date", [])
+    amount_columns = column_mapping.get("Amount", [])
+
     new_row = {col: np.nan for col in original_csv.columns}
+
     for orig_col, idx in column_indices.items():
         if not pd.isna(imported_row.iloc[idx]):
+            value = imported_row.iloc[idx]
+
             if orig_col in date_columns:
-                new_row[orig_col] = parse_date(imported_row.iloc[idx])
+                new_row[orig_col] = parse_date(value)
+            elif orig_col in amount_columns:
+                new_row[orig_col] = normalize_number_format(value, english_decimal_separator)
             else:
-                new_row[orig_col] = imported_row.iloc[idx]
+                new_row[orig_col] = value
+
     return new_row
 
 

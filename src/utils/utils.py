@@ -1,4 +1,5 @@
 import os
+import re
 import sys
 
 import src.config.constants as cts
@@ -61,3 +62,46 @@ def user_directory_path(relative_path):
     # If run for development from IDE
     else:
         return resource_path(relative_path)
+
+
+def normalize_number_format(s, english_decimal_separator=True):
+    """
+    Normalizes mixed number formats to a consistent format.
+
+    Parameters:
+    - s: The string representing the number to normalize.
+    - english_decimal_separator: If True, normalizes to English format (dot as decimal separator).
+                                 If False, retains or converts to a comma as the decimal separator.
+
+    Returns:
+    - The normalized number as a string.
+    """
+    # Pattern to identify standard format (e.g., 1.234,56)
+    standard_format = re.compile(r'^-?\d{1,3}(?:\.\d{3})*,?\d*$')
+
+    # Pattern to identify English format (e.g., 1,234.56)
+    eng_format = re.compile(r'^-?\d{1,3}(?:,\d{3})*\.?\d*$')
+
+    if standard_format.match(s):
+        if english_decimal_separator:
+            # Convert from standard to English format
+            return s.replace('.', '').replace(',', '.')
+        else:
+            # Already in Euro format, remove dots if needed
+            return s.replace('.', '')
+
+    elif eng_format.match(s):
+        if english_decimal_separator:
+            # Already in English format, remove commas if needed
+            return s.replace(',', '')
+        else:
+            # Convert from English format to standard format with comma as decimal separator
+            return s.replace(',', '').replace('.', ',')
+    else:
+        print(f"Warning: weird format of number: '{s}' - trying to convert anyway..")
+        if english_decimal_separator:
+            # Convert to English format
+            return s.replace(',', '.')
+        else:
+            # Convert to standard format with comma as decimal separator
+            return s.replace('.', ',')

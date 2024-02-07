@@ -4,7 +4,7 @@
   "Project": ["botland"],
   "Car": ["ppo", "bp", "orlen", "myjnia", "parkomat", "circle k"],
   "Tax": ["pit-5", "vat-7", "zus"],
-  "Transport": ["uber *trip", "bolt", "ppo"],
+  "Transport": ["uber *trip", "uber trip", "bolt", "ppo"],
   "Education": ["ksiegarnia"],
   "Gifts": ["dla rodzin sos"],
   "Finance": [],
@@ -19,15 +19,16 @@
   "Travel": ["booking.com", "wizz"],
   "Shopping": ["avt", "media markt", "aliexpress", "euro-net", "botland", "x-kom", "morele", "saturn", "neonet",
     "deichmann", "h&m", "zara", "reserved", "nastopy", "mohito", "bytom", "atlantic", "vistula", "ccc", "tk maxx",
-    "rossmann", "sephora", "douglas", "inglot"
+    "rossmann", "sephora", "douglas", "inglot", "Allegro"
   ],
   "Cash": [],
   "Food": ["lidl", "carrefour", "auchan", "aldi", "biedronka", "putka", "freshmarket", "netto",
     "zabka", "stokrotka", "hipcia", "lisek", "jedzenie na mieście", "pizza", "mcdonalds",
     "mcdonald's", "restauracja", "sushi", "kebab", "chichi", "silver dragon", "redberry", "kfc",
-    "glovo", "wolt", "pyszne", "jeff's", "jeff\"s", "jeffs", "asian house", "silver dragon", "uber eats",
+    "glovo", "wolt", "pyszne", "jeff's", "jeff\"s", "jeffs", "asian house", "silver dragon", "uber *eats", "uber eats",
     "bolt food", "the mexican", "seafood station", "dominospizza", "dino", "frisco", "costa coffee",
-    "pizza na wypasie", "tre orsi"],
+    "pizza na wypasie", "tre orsi", "north fish"
+  ],
   "Entertainment": ["netflix", "hbo", "amazon prime",
     "bar koszyki", "smolna", "klub proznosc", "nocny targ", "klub cialo", "smoke shop", "szwedzka23", "spin city",
     "cinema city", "multikino", "energylandia"],
