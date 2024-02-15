@@ -2,8 +2,8 @@
   "taxi": ["uber", "bolt"],
   "grocery": ["lidl", "carrefour", "auchan", "aldi", "biedronka", "putka", "freshmarket", "netto",
     "zabka", "stokrotka", "hipcia", "lisek", "dino", "frisco"],
-  "cornerShop": ["zabka", "stokrotka", "hipcia", "lisek"],
-  "eatingOut": ["jedzenie na mieście", "pizza", "mcdonalds", "mcdonald's", "restauracja", "sushi", "kebab",
+  "cornershop": ["zabka", "stokrotka", "hipcia", "lisek"],
+  "eatingout": ["jedzenie na mieście", "pizza", "mcdonalds", "mcdonald's", "restauracja", "sushi", "kebab",
     "chichi", "silver dragon", "redberry", "kfc", "glovo", "wolt", "pyszne", "jeff's", "jeff\"s", "jeffs",
     "asian house", "silver dragon", "uber eats", "bolt food", "the mexican", "seafood station",
     "dominospizza", "pizza na wypasie", "tre orsi"],
@@ -14,8 +14,8 @@
   "cosmetics": ["rossmann", "sephora", "douglas", "inglot"],
   "paliwo": ["bp", "Orlen"],
   "plant": ["centrum ogrodnicze"],
-  "VOD": ["netflix", "hbo", "amazon prime"],
-  "ASG": ["militaria", "taiwangun"],
+  "vod": ["netflix", "hbo", "amazon prime"],
+  "asg": ["militaria", "taiwangun"],
   "highway": ["PPO"],
   "alko": ["bar koszyki", "smolna", "klub proznosc", "nocny targ", "klub cialo"]
 }
