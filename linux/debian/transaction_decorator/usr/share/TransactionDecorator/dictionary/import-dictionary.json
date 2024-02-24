@@ -1,0 +1,13 @@
+{
+  "column_mapping": {
+    "Date": ["Date","#Data operacji", "Data transakcji"],
+    "Wallet": ["Wallet","#Rachunek"],
+    "Type": ["Type"],
+    "Category name": ["Category name"],
+    "Amount": ["Amount","Kwota w walucie rachunku", "#Kwota"],
+    "Currency": ["Currency"],
+    "Note": ["Note","#Opis operacji", "Szczegó³y transakcji", "Szczegóły transakcji"],
+    "Labels": ["Labels"],
+    "Author": ["Author"]
+  }
+}

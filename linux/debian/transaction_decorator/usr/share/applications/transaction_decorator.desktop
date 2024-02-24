@@ -1,0 +1,7 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Transaction Decorator
+Exec=/usr/bin/TransactionDecorator
+Icon=/usr/share/pixmaps/TransactionDecorator/logo.png
+Categories=Utility;

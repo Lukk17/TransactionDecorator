@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Set PYTHONPATH to include the directory where your Python packages are located
+export PYTHONPATH=$PYTHONPATH:/usr/lib/TransactionDecorator
+
+# Execute your main Python script
+python3 /usr/lib/TransactionDecorator/src/gui.py
