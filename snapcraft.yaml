@@ -1,0 +1,57 @@
+name: transactiondecorator
+base: core20
+version: '1.0.0'
+summary: TransactionDecorator is a utility to decorate transactions.
+description: This application provides an interface for managing transactions.
+grade: stable
+confinement: strict
+
+apps:
+  transactiondecorator:
+    command: $SNAP/usr/bin/TransactionDecorator
+    desktop: usr/share/applications/transaction_decorator.desktop
+    plugs: [desktop, x11, wayland, unity7, home, network]
+
+parts:
+#  onlypythondependency:
+#    plugin: python
+#    source: .
+#    #    python packages required by app (will be put into snap files)
+#    #    already added in setup.py file - no need to duplicate it here
+#    python-packages:
+#      - pandas
+#      - numpy
+#      - matplotlib
+#      - chardet
+#      - PySide6
+#
+#    #    packages required by app to run on linux (will be put into snap files)
+#    stage-packages:
+#      - libxcb-xinerama0
+#      - libxcb1
+#      - libx11-xcb1
+#      - libglu1-mesa
+#      - libxrender1
+#      - libxi6
+
+  transactiondecorator:
+    plugin: dump
+#    directive tells Snapcraft to include the entire project directory as the context for the snap build
+#    it is relative to terminal working directory (pwd) from which script was launched
+    source: .
+
+#    specify what and from where to copy <origin>: <destination>
+#    paths are relative to a path specified in "source"
+    organize:
+      'src/': usr/lib/TransactionDecorator/src/
+      'icons/': usr/share/TransactionDecorator/icons/
+      'csv/allTransactions.csv': usr/share/TransactionDecorator/csv/
+      'dictionary/': usr/share/TransactionDecorator/dictionary/
+      'linux/snap/transaction_decorator.desktop': usr/share/applications/transaction_decorator.desktop
+      'linux/snap/TransactionDecorator': usr/bin/TransactionDecorator
+
+#  create-backup-dir:
+#    plugin: nil
+#    override-prime: |
+#      mkdir -p $SNAPCRAFT_PRIME/usr/share/TransactionDecorator/backup
+#

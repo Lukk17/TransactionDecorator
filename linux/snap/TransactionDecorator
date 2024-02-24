@@ -1,0 +1,2 @@
+#!/bin/bash
+python3 $SNAP/usr/lib/TransactionDecorator/src/gui.py
