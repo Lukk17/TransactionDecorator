@@ -13,6 +13,8 @@ In ``dictionary`` folder there is json file called `labels-dictionary.json`
 Project structure for development you can see [here](#structure-for-development) 
 and for installing [here](#structure-of-folders-and-files-after-installation-which-are-required-for-app-to-work)
 
+`src` folder should be marked as "Sources Root" in IDE (that way imports will be correctly visible by IDE)
+
 Run configurations for IDE are stored in `.run` folder.  
 You can find ones for:
  * direct launch app via python script

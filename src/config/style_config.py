@@ -1,4 +1,4 @@
-import src.config.constants as cts
+import config.constants as cts
 
 
 def get_app_style():
@@ -27,7 +27,6 @@ def get_app_style():
                 padding: 5px;
                 border: none;
                 outline: none;
-                box-shadow: 4px 4px 6px #1a1c1e, -4px -4px 6px #3e4247;
             }}
             QLineEdit:hover {{
                 background-color: {cts.FIELD_HOVER_COLOR};

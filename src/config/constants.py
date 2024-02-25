@@ -1,4 +1,6 @@
 APP_NAME = 'TransactionDecorator'
+# same as in snapcraft.yaml `name:` at the beginning of script
+APP_SNAP_NAME = 'transactiondecorator'
 
 # Processing constants
 CSV_DELIMITER = ';'

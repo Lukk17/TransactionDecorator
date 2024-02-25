@@ -7,11 +7,11 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QHBoxLayout, QPushButton, QLabel, QLineEdit, QVBoxLayout,
                                QCheckBox, QSpacerItem, QSizePolicy, QDialog, QComboBox, QDialogButtonBox)
 
-import src.config.constants as cts
-from src.config.style_config import get_checkbox_style, get_import_dialog_style
-from src.gui_elements.confirmation_dialog import ConfirmationDialog
-from src.processor.process_import import import_csv
-from src.utils.utils import user_directory_path, resource_path
+import config.constants as cts
+from config.style_config import get_checkbox_style, get_import_dialog_style
+from gui_elements.confirmation_dialog import ConfirmationDialog
+from processor.process_import import import_csv
+from utils.utils import user_directory_path, resource_path
 
 
 def create_labeled_input(label_text, placeholder):

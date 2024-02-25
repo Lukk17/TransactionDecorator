@@ -53,3 +53,14 @@ To clean snapcraft:
 ```shell
 snapcraft clean
 ```
+
+For base22:  
+```shell
+sudo usermod -a -G lxd $USER
+```
+```shell
+newgrp lxd
+```
+```shell
+lxd init
+```

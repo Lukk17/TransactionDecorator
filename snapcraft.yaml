@@ -1,5 +1,5 @@
 name: transactiondecorator
-base: core20
+base: core22
 version: '1.0.0'
 summary: TransactionDecorator is a utility to decorate transactions.
 description: This application provides an interface for managing transactions.
@@ -8,40 +8,15 @@ confinement: strict
 
 apps:
   transactiondecorator:
-    command: $SNAP/usr/bin/TransactionDecorator
+    command: usr/bin/TransactionDecorator
     desktop: usr/share/applications/transaction_decorator.desktop
     plugs: [desktop, x11, wayland, unity7, home, network]
 
 parts:
-#  onlypythondependency:
-#    plugin: python
-#    source: .
-#    #    python packages required by app (will be put into snap files)
-#    #    already added in setup.py file - no need to duplicate it here
-#    python-packages:
-#      - pandas
-#      - numpy
-#      - matplotlib
-#      - chardet
-#      - PySide6
-#
-#    #    packages required by app to run on linux (will be put into snap files)
-#    stage-packages:
-#      - libxcb-xinerama0
-#      - libxcb1
-#      - libx11-xcb1
-#      - libglu1-mesa
-#      - libxrender1
-#      - libxi6
 
-  transactiondecorator:
+  assets:
     plugin: dump
-#    directive tells Snapcraft to include the entire project directory as the context for the snap build
-#    it is relative to terminal working directory (pwd) from which script was launched
     source: .
-
-#    specify what and from where to copy <origin>: <destination>
-#    paths are relative to a path specified in "source"
     organize:
       'src/': usr/lib/TransactionDecorator/src/
       'icons/': usr/share/TransactionDecorator/icons/
@@ -50,8 +25,98 @@ parts:
       'linux/snap/transaction_decorator.desktop': usr/share/applications/transaction_decorator.desktop
       'linux/snap/TransactionDecorator': usr/bin/TransactionDecorator
 
-#  create-backup-dir:
-#    plugin: nil
-#    override-prime: |
-#      mkdir -p $SNAPCRAFT_PRIME/usr/share/TransactionDecorator/backup
-#
+  transactiondecorator:
+    after: [assets]
+    plugin: python
+    build-environment:
+      - PYTHONPATH: $SNAP/usr/lib/TransactionDecorator/src
+
+#    directive tells Snapcraft to include the entire project directory as the context for the snap build
+#    it is relative to terminal working directory (pwd) from which script was launched
+    source: .
+    override-build: |
+      # Run the default build step
+      snapcraftctl build
+      # Install Python dependencies from requirements.txt
+      pip install -r src/requirements.txt
+
+    #    python packages required by app (will be put into snap files)
+    #    already added in setup.py file - no need to duplicate it here
+    python-packages:
+      - pandas
+      - numpy
+      - matplotlib
+      - chardet
+      - PySide6
+
+    #    packages required by app to run on linux (will be put into snap files)
+    stage-packages:
+      - libxcb-xinerama0
+      - libxcb1
+      - libx11-xcb1
+      - libglu1-mesa
+      - libxrender1
+      - libxi6
+      - libxkbcommon-x11-0
+      - libgl1-mesa-glx
+      - libegl1
+      - libx11-6
+      - libxext6
+      - libfontconfig1
+      - libfreetype6
+      - libpulse0
+      - libwayland-cursor0
+      - libwayland-egl1
+      - libxcomposite1
+      - libxdamage1
+      - libxrandr2
+      - libxtst6
+      - libasound2
+      - libnspr4
+      - libnss3
+      - libxkbfile1
+      - libcups2
+      - libxcb-cursor0
+      - libxcb-icccm4
+      - libxcb-image0
+      - libxcb-keysyms1
+      - libxcb-render-util0
+      - libxcb-render0
+      - libxcb-shape0
+      - libxcb-xinerama0
+      - libxcb-xkb1
+      - libxkbcommon-x11-0
+      - libxkbcommon0
+      - libwayland-client0
+      - libwayland-server0
+      - libwayland-egl-backend-dev
+      - gstreamer1.0-plugins-base
+      - gstreamer1.0-plugins-good
+      - gstreamer1.0-plugins-bad
+      - gstreamer1.0-plugins-ugly
+      - libgstreamer-gl1.0-0
+      - libgstreamer1.0-0
+      - libgstreamer1.0-dev
+      - libatk1.0-0
+      - libcairo-gobject2
+      - libcairo2
+      - libgdk-pixbuf2.0-0
+      - libgtk-3-0
+      - libpango-1.0-0
+      - libpangocairo-1.0-0
+      - libspeechd2
+      - libmysqlclient21
+      - libpq5
+      - libodbc1
+      - odbcinst
+      - odbcinst1debian2
+      - unixodbc
+      - libsqlite3-0
+
+  create-backup-dir:
+    after: [transactiondecorator]
+    plugin: nil
+    override-prime: |
+      mkdir -p $SNAPCRAFT_PRIME/usr/share/TransactionDecorator/backup
+      chmod 755 -R $SNAPCRAFT_PRIME/usr/share/TransactionDecorator
+
