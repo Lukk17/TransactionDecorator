@@ -11,9 +11,13 @@ def resource_path(relative_path):
         Consistently navigates to the parent directory of 'src' before appending the relative path. """
 
     if getattr(sys, 'frozen', False):
-        print("[resource_path] running on Windows")
-        # In a bundled app, get the directory of the .exe file
-        base_path = os.path.dirname(sys.executable)
+        if is_snap():
+            base_path = get_snap_base_path()
+
+        else:
+            print("[resource_path] running on Windows")
+            # In a bundled app, get the directory of the .exe file
+            base_path = os.path.dirname(sys.executable)
 
     elif os.path.exists('../.idea'):
         print("[resource_path] started by IDE")
@@ -25,17 +29,13 @@ def resource_path(relative_path):
 
     elif sys.platform == "linux":
         if is_snap():
-            snap_root = os.environ.get('SNAP', '')
-            print("[resource_path] running as SNAP")
-            base_path = os.path.join(snap_root, 'usr', 'share', 'TransactionDecorator', relative_path)
+            base_path = get_snap_base_path()
         else:
             print("[resource_path] running in linux")
             base_path = '/usr/share/TransactionDecorator'
 
     elif is_snap():
-        snap_root = os.environ.get('SNAP', '')
-        print("[resource_path] running as SNAP")
-        base_path = os.path.join(snap_root, 'usr', 'share', 'TransactionDecorator', relative_path)
+        base_path = get_snap_base_path()
 
     else:
         print("[resource_path] running on unrecognized platform")
@@ -57,10 +57,7 @@ def user_directory_path(relative_path):
     if getattr(sys, 'frozen', False):
         # snap can set frozen attribute
         if is_snap():
-            directory_path = os.path.join(os.environ.get('SNAP_USER_DATA', '~'), relative_path)
-
-            print("[user_directory_path] SNAP path: ", directory_path)
-            return directory_path
+            return get_snap_user_directory_path(relative_path)
 
         elif sys.platform == "win32":
             # For Windows, construct the path within the AppData directory
@@ -87,10 +84,8 @@ def user_directory_path(relative_path):
     elif sys.platform == "linux":
         # snap can have sys.platform = "linux"
         if is_snap():
-            directory_path = os.path.join(os.environ.get('SNAP_USER_DATA', '~'), relative_path)
+            return get_snap_user_directory_path(relative_path)
 
-            print("[user_directory_path] SNAP path: ", directory_path)
-            return directory_path
         elif os.path.exists('../.idea'):
             directory_path = resource_path(relative_path)
 
@@ -104,10 +99,7 @@ def user_directory_path(relative_path):
         return directory_path
 
     if is_snap():
-        directory_path = os.path.join(os.environ.get('SNAP_USER_DATA', '~'), relative_path)
-
-        print("[user_directory_path] SNAP path: ", directory_path)
-        return directory_path
+        return get_snap_user_directory_path(relative_path)
 
     # If run for development from IDE mostly on Windows
     else:
@@ -117,8 +109,27 @@ def user_directory_path(relative_path):
         return directory_path
 
 
+def get_snap_base_path():
+    print("[resource_path] running as SNAP")
+    snap_root = os.environ.get('SNAP', '')
+    base_path = os.path.join(snap_root, 'usr', 'share', os.environ.get('TRANSACTION_DECORATOR_SNAP_NAME', ''))
+    return base_path
+
+
+def get_snap_user_directory_path(relative_path):
+    # snap_user_data_path = os.environ.get('SNAP_USER_DATA', '')
+    # base_user_data_path = os.path.join(snap_user_data_path, 'transaction-decorator')
+    # os.makedirs(base_user_data_path, exist_ok=True)
+    # directory_path = os.path.join(base_user_data_path, relative_path)
+    snap_data_path = os.environ.get('SNAP_DATA', '')
+    directory_path = os.path.join(snap_data_path, relative_path)
+    # directory_path = os.path.join(get_snap_base_path(), relative_path)
+    print("[user_directory_path] SNAP path: ", directory_path)
+    return directory_path
+
+
 def is_snap():
-    return os.environ.get('SNAP_NAME', '') == ('%s' % cts.APP_SNAP_NAME)
+    return os.environ.get('SNAP_NAME', '') == os.environ.get('TRANSACTION_DECORATOR_SNAP_NAME', '')
 
 
 def normalize_number_format(s, english_decimal_separator=True):

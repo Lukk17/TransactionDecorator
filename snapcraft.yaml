@@ -1,4 +1,5 @@
-name: transactiondecorator
+# snap package name - need to be same in a path in TransactionDecorator sh entrypoint
+name: transaction-decorator
 base: core22
 version: '1.0.0'
 summary: TransactionDecorator is a utility to decorate transactions.
@@ -7,47 +8,77 @@ grade: stable
 confinement: strict
 
 apps:
-  transactiondecorator:
-    command: usr/bin/TransactionDecorator
+#  this needs to be the same name as top-level "name:" if not then to run snap from terminal:
+#  <top-level-name>.<name-in-apps> example if this name in "apps: will be transaction-decorator-app:
+#  to run in terminal you will need command: transaction-decorator.transaction-decorator-app
+  transaction-decorator:
+    environment:
+      TRANSACTION_DECORATOR_SNAP_NAME: transaction-decorator
+    command: usr/bin/transaction-decorator-entrypoint
     desktop: usr/share/applications/transaction_decorator.desktop
-    plugs: [desktop, x11, wayland, unity7, home, network]
+#    extensions:
+#      - desktop-gtk3
+#    extensions:
+#      - gnome-3-38
+    plugs:
+      - desktop
+      - x11
+      - wayland
+      - unity7
+      - home
+      - network
+
+plugs:
+  gtk-3-themes:
+    interface: content
+    target: $SNAP/themes
+    default-provider: gtk-common-themes
+  icon-themes:
+    interface: content
+    target: $SNAP/icons
+    default-provider: gtk-common-themes
+  sound-themes:
+    interface: content
+    target: $SNAP/sounds
+    default-provider: gtk-common-themes
 
 parts:
-
-  assets:
+  assets-part:
     plugin: dump
     source: .
     organize:
-      'src/': usr/lib/TransactionDecorator/src/
-      'icons/': usr/share/TransactionDecorator/icons/
-      'csv/allTransactions.csv': usr/share/TransactionDecorator/csv/
-      'dictionary/': usr/share/TransactionDecorator/dictionary/
+      'src/': usr/lib/transaction-decorator/src/
+      'icons/': usr/share/transaction-decorator/icons/
+      'csv/allTransactions.csv': usr/share/transaction-decorator/csv/
+      'dictionary/': usr/share/transaction-decorator/dictionary/
       'linux/snap/transaction_decorator.desktop': usr/share/applications/transaction_decorator.desktop
-      'linux/snap/TransactionDecorator': usr/bin/TransactionDecorator
+      'linux/snap/transaction-decorator-entrypoint': usr/bin/transaction-decorator-entrypoint
 
-  transactiondecorator:
-    after: [assets]
+  hooks-part:
+    plugin: dump
+    source: linux/snap/hooks
+    organize:
+      'user-data-copy.sh': snap/hooks/install
+
+  transaction-decorator-part:
+    after: [ assets-part ]
     plugin: python
     build-environment:
-      - PYTHONPATH: $SNAP/usr/lib/TransactionDecorator/src
+      - PYTHONPATH: $SNAP/usr/lib/transaction-decorator/src
 
-#    directive tells Snapcraft to include the entire project directory as the context for the snap build
-#    it is relative to terminal working directory (pwd) from which script was launched
+    #    directive tells Snapcraft to include the entire project directory as the context for the snap build
+    #    it is relative to terminal working directory (pwd) from which script was launched
     source: .
-    override-build: |
-      # Run the default build step
-      snapcraftctl build
-      # Install Python dependencies from requirements.txt
-      pip install -r src/requirements.txt
 
-    #    python packages required by app (will be put into snap files)
-    #    already added in setup.py file - no need to duplicate it here
+#    recommended packages for python build phase
+    build-packages:
+      - python3-dev
+      - build-essential
+
+#    required to install python packages specified in setu.py file
     python-packages:
-      - pandas
-      - numpy
-      - matplotlib
-      - chardet
-      - PySide6
+      - setuptools
+      - wheel
 
     #    packages required by app to run on linux (will be put into snap files)
     stage-packages:
@@ -83,9 +114,7 @@ parts:
       - libxcb-render-util0
       - libxcb-render0
       - libxcb-shape0
-      - libxcb-xinerama0
       - libxcb-xkb1
-      - libxkbcommon-x11-0
       - libxkbcommon0
       - libwayland-client0
       - libwayland-server0
@@ -105,18 +134,11 @@ parts:
       - libpango-1.0-0
       - libpangocairo-1.0-0
       - libspeechd2
-      - libmysqlclient21
-      - libpq5
-      - libodbc1
       - odbcinst
       - odbcinst1debian2
       - unixodbc
       - libsqlite3-0
-
-  create-backup-dir:
-    after: [transactiondecorator]
-    plugin: nil
-    override-prime: |
-      mkdir -p $SNAPCRAFT_PRIME/usr/share/TransactionDecorator/backup
-      chmod 755 -R $SNAPCRAFT_PRIME/usr/share/TransactionDecorator
+      - hicolor-icon-theme
+      - gnome-icon-theme
+      - adwaita-icon-theme-full
 

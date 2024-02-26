@@ -2,6 +2,6 @@
 Version=1.0
 Type=Application
 Name=Transaction Decorator
-Exec=/usr/bin/TransactionDecorator
-Icon=/usr/share/TransactionDecorator/icons/logo.png
+Exec=/usr/bin/transaction-decorator-entrypoint
+Icon=/usr/share/transaction-decorator/icons/logo.png
 Categories=Utility;
