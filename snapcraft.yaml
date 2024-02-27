@@ -5,7 +5,7 @@ version: '1.0.0'
 summary: TransactionDecorator is a utility to decorate transactions.
 description: This application provides an interface for managing transactions.
 grade: stable
-confinement: strict
+confinement: classic
 
 apps:
 #  this needs to be the same name as top-level "name:" if not then to run snap from terminal:
@@ -14,8 +14,8 @@ apps:
   transaction-decorator:
     environment:
       TRANSACTION_DECORATOR_SNAP_NAME: transaction-decorator
-    command: usr/bin/transaction-decorator-entrypoint
-    desktop: usr/share/applications/transaction_decorator.desktop
+    command: $SNAP/usr/bin/transaction-decorator-entrypoint
+    desktop: $SNAP/usr/share/applications/transaction_decorator.desktop
 #    extensions:
 #      - desktop-gtk3
 #    extensions:
@@ -55,16 +55,15 @@ parts:
       'linux/snap/transaction-decorator-entrypoint': usr/bin/transaction-decorator-entrypoint
 
   hooks-part:
+    after: [ assets-part ]
     plugin: dump
     source: linux/snap/hooks
     organize:
       'user-data-copy.sh': snap/hooks/install
 
   transaction-decorator-part:
-    after: [ assets-part ]
+    after: [ hooks-part ]
     plugin: python
-    build-environment:
-      - PYTHONPATH: $SNAP/usr/lib/transaction-decorator/src
 
     #    directive tells Snapcraft to include the entire project directory as the context for the snap build
     #    it is relative to terminal working directory (pwd) from which script was launched
