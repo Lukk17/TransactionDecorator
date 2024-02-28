@@ -80,6 +80,11 @@ to remove snap:
 sudo snap remove transaction-decorator
 ```
 
+to run additional app mentioned in `apps` part of `snapcraft.yaml` for example to run copying scripts run:
+```shell
+snap run transaction-decorator.run-user-data-copy
+```
+
 For base22:  
 ```shell
 sudo usermod -a -G lxd $USER

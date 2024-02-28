@@ -118,12 +118,8 @@ def get_snap_base_path():
 
 def get_snap_user_directory_path(relative_path):
     snap_user_data_path = os.environ.get('SNAP_USER_DATA', '')
-    base_user_data_path = os.path.join(snap_user_data_path, 'transaction-decorator')
-    # os.makedirs(base_user_data_path, exist_ok=True)
-    directory_path = os.path.join(base_user_data_path, relative_path)
-    # snap_data_path = os.environ.get('SNAP_DATA', '')
-    # directory_path = os.path.join(snap_data_path, relative_path)
-    # directory_path = os.path.join(get_snap_base_path(), relative_path)
+    directory_path = os.path.join(snap_user_data_path, relative_path)
+
     print("[user_directory_path] SNAP path: ", directory_path)
     return directory_path
 

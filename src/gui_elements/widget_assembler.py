@@ -34,9 +34,6 @@ def open_directory(relative_path):
     if sys.platform == "win32":
         os.startfile(directory_path)
 
-    elif sys.platform == "darwin":
-        Popen(["open", directory_path])
-
     else:
         Popen(["xdg-open", directory_path])
 

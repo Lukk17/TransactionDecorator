@@ -14,12 +14,8 @@ apps:
   transaction-decorator:
     environment:
       TRANSACTION_DECORATOR_SNAP_NAME: transaction-decorator
-    command: $SNAP/usr/bin/transaction-decorator-entrypoint
-    desktop: $SNAP/usr/share/applications/transaction_decorator.desktop
-#    extensions:
-#      - desktop-gtk3
-#    extensions:
-#      - gnome-3-38
+    command: usr/bin/transaction-decorator-entrypoint
+    desktop: usr/share/applications/transaction_decorator.desktop
     plugs:
       - desktop
       - x11
@@ -28,19 +24,10 @@ apps:
       - home
       - network
 
-plugs:
-  gtk-3-themes:
-    interface: content
-    target: $SNAP/themes
-    default-provider: gtk-common-themes
-  icon-themes:
-    interface: content
-    target: $SNAP/icons
-    default-provider: gtk-common-themes
-  sound-themes:
-    interface: content
-    target: $SNAP/sounds
-    default-provider: gtk-common-themes
+  run-user-data-copy:
+    command: user-data-copy.sh
+    daemon: simple
+    restart-condition: never
 
 parts:
   assets-part:
@@ -54,90 +41,31 @@ parts:
       'linux/snap/transaction_decorator.desktop': usr/share/applications/transaction_decorator.desktop
       'linux/snap/transaction-decorator-entrypoint': usr/bin/transaction-decorator-entrypoint
 
-  hooks-part:
+  python-part:
     after: [ assets-part ]
+    plugin: nil
+    source: .
+    build-packages:
+      - python3-dev  # Ensure Python development files are available
+      - python3-setuptools  # Required for setup.py
+      - python3-pip  # In case you need pip
+    override-build: |
+      # Use the Python from the build environment
+      python3 $SNAPCRAFT_PART_SRC/setup.py install --root=$SNAPCRAFT_PART_INSTALL
+
+  hooks-part:
+    after: [ python-part ]
     plugin: dump
     source: linux/snap/hooks
-    organize:
-      'user-data-copy.sh': snap/hooks/install
 
-  transaction-decorator-part:
-    after: [ hooks-part ]
-    plugin: python
 
-    #    directive tells Snapcraft to include the entire project directory as the context for the snap build
-    #    it is relative to terminal working directory (pwd) from which script was launched
-    source: .
-
-#    recommended packages for python build phase
-    build-packages:
-      - python3-dev
-      - build-essential
-
-#    required to install python packages specified in setu.py file
-    python-packages:
-      - setuptools
-      - wheel
-
-    #    packages required by app to run on linux (will be put into snap files)
-    stage-packages:
-      - libxcb-xinerama0
-      - libxcb1
-      - libx11-xcb1
-      - libglu1-mesa
-      - libxrender1
-      - libxi6
-      - libxkbcommon-x11-0
-      - libgl1-mesa-glx
-      - libegl1
-      - libx11-6
-      - libxext6
-      - libfontconfig1
-      - libfreetype6
-      - libpulse0
-      - libwayland-cursor0
-      - libwayland-egl1
-      - libxcomposite1
-      - libxdamage1
-      - libxrandr2
-      - libxtst6
-      - libasound2
-      - libnspr4
-      - libnss3
-      - libxkbfile1
-      - libcups2
-      - libxcb-cursor0
-      - libxcb-icccm4
-      - libxcb-image0
-      - libxcb-keysyms1
-      - libxcb-render-util0
-      - libxcb-render0
-      - libxcb-shape0
-      - libxcb-xkb1
-      - libxkbcommon0
-      - libwayland-client0
-      - libwayland-server0
-      - libwayland-egl-backend-dev
-      - gstreamer1.0-plugins-base
-      - gstreamer1.0-plugins-good
-      - gstreamer1.0-plugins-bad
-      - gstreamer1.0-plugins-ugly
-      - libgstreamer-gl1.0-0
-      - libgstreamer1.0-0
-      - libgstreamer1.0-dev
-      - libatk1.0-0
-      - libcairo-gobject2
-      - libcairo2
-      - libgdk-pixbuf2.0-0
-      - libgtk-3-0
-      - libpango-1.0-0
-      - libpangocairo-1.0-0
-      - libspeechd2
-      - odbcinst
-      - odbcinst1debian2
-      - unixodbc
-      - libsqlite3-0
-      - hicolor-icon-theme
-      - gnome-icon-theme
-      - adwaita-icon-theme-full
+#  transaction-decorator-part:
+#    after: [ hooks-part ]
+##    after: [ assets-part ]
+#
+#    plugin: python
+#
+#    #    directive tells Snapcraft to include the entire project directory as the context for the snap build
+#    #    it is relative to terminal working directory (pwd) from which script was launched
+#    source: .
 
