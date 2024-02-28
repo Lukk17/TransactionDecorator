@@ -25,47 +25,54 @@ apps:
       - network
 
   run-user-data-copy:
-    command: user-data-copy.sh
+    command: user-data/user-data-copy.sh
     daemon: simple
     restart-condition: never
 
 parts:
-  assets-part:
+  sources-part:
     plugin: dump
-    source: .
+    source: src/
     organize:
-      'src/': usr/lib/transaction-decorator/src/
-      'icons/': usr/share/transaction-decorator/icons/
-      'csv/allTransactions.csv': usr/share/transaction-decorator/csv/
-      'dictionary/': usr/share/transaction-decorator/dictionary/
-      'linux/snap/transaction_decorator.desktop': usr/share/applications/transaction_decorator.desktop
-      'linux/snap/transaction-decorator-entrypoint': usr/bin/transaction-decorator-entrypoint
+      '*': usr/lib/transaction-decorator/src/
+
+  icons-part:
+    after: [ sources-part ]
+    plugin: dump
+    source: icons/
+    organize:
+      '*': usr/share/transaction-decorator/icons/
+
+  csv-part:
+    after: [ icons-part ]
+    plugin: dump
+    source: csv/
+    organize:
+      'allTransactions.csv': usr/share/transaction-decorator/csv/
+
+  dictionary-part:
+    after: [ csv-part ]
+    plugin: dump
+    source: dictionary/
+    organize:
+      '*': usr/share/transaction-decorator/dictionary/
+
+  entrypoint-part:
+    after: [ dictionary-part ]
+    plugin: dump
+    source: linux/snap/
+    organize:
+      'transaction_decorator.desktop': usr/share/applications/
+      'transaction-decorator-entrypoint': usr/bin/
 
   python-part:
-    after: [ assets-part ]
+    after: [ entrypoint-part ]
     plugin: nil
     source: .
     build-packages:
       - python3-dev  # Ensure Python development files are available
       - python3-setuptools  # Required for setup.py
-      - python3-pip  # In case you need pip
+      - python3-pip
     override-build: |
       # Use the Python from the build environment
       python3 $SNAPCRAFT_PART_SRC/setup.py install --root=$SNAPCRAFT_PART_INSTALL
-
-  hooks-part:
-    after: [ python-part ]
-    plugin: dump
-    source: linux/snap/hooks
-
-
-#  transaction-decorator-part:
-#    after: [ hooks-part ]
-##    after: [ assets-part ]
-#
-#    plugin: python
-#
-#    #    directive tells Snapcraft to include the entire project directory as the context for the snap build
-#    #    it is relative to terminal working directory (pwd) from which script was launched
-#    source: .
-

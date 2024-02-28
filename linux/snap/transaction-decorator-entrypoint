@@ -1,6 +1,6 @@
 #!/bin/bash
 
-SETUP_SCRIPT="$SNAP/user-data-copy.sh"
+SETUP_SCRIPT="$SNAP/user-data/user-data-copy.sh"
 
 # Example check - adapt according to your specific needs
 if [ ! -f "$SNAP_USER_DATA/csv/allTransactions.csv" ]; then

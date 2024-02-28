@@ -128,6 +128,14 @@ def is_snap():
     return os.environ.get('SNAP_NAME', '') == os.environ.get('TRANSACTION_DECORATOR_SNAP_NAME', '')
 
 
+def change_to_user_directory():
+    home_directory = os.path.expanduser('~')
+    try:
+        os.chdir(home_directory)
+    except Exception as e:
+        print(f"Failed to change directory: {e}")
+
+
 def normalize_number_format(s, english_decimal_separator=True):
     """
     Normalizes mixed number formats to a consistent format.

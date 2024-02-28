@@ -4,7 +4,7 @@ from config.style_config import get_app_style, get_process_button_style
 from gui_elements.title_bar import TitleBar
 from gui_elements.widget_assembler import *
 from processor.process_transactions import *
-from utils.utils import resource_path
+from utils.utils import resource_path, change_to_user_directory
 
 
 class FramelessMainWindow(QMainWindow):
@@ -120,9 +120,12 @@ class FramelessMainWindow(QMainWindow):
         self.csv_button.click()
 
 
+
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = FramelessMainWindow()
+
+    change_to_user_directory()
 
     print("")
     print("[gui] sys.path:", sys.path)  # Show all search paths

@@ -42,8 +42,7 @@ then in `linux` directory, where a script is located:
 ```shell
 snapcraft
 ```
-Before re-compiling snap delete old compiled snap package from directory.  
-For debug use(it will shell into built snap):
+For debug use (it will shell into built snap):
 ```shell
 snapcraft --debug
 ```
@@ -57,10 +56,10 @@ Built package will be in `linux` directory.
 
 To install snap from compiled package:
 ```shell
-sudo snap install --dangerous ./transaction-decorator_1.0.0_amd64.snap
+sudo snap install --dangerous --classic ./transaction-decorator_1.0.0_amd64.snap
 ```
 
-To run snap from terminal (and see logs):
+To run snap from the terminal (and see logs):
 ```shell
 transaction-decorator
 ```
