@@ -32,7 +32,7 @@ def resource_path(relative_path):
             base_path = get_snap_base_path()
         else:
             print("[resource_path] running in linux")
-            base_path = '/usr/share/TransactionDecorator'
+            base_path = '/usr/lib/transaction-decorator'
 
     elif is_snap():
         base_path = get_snap_base_path()
@@ -93,7 +93,7 @@ def user_directory_path(relative_path):
             return directory_path
 
         # For Linux, place user-specific data in the home directory
-        directory_path = os.path.join(os.path.expanduser('~'), '.TransactionDecorator', relative_path)
+        directory_path = os.path.join('/usr/share', 'transaction-decorator', relative_path)
 
         print("[user_directory_path] linux path: ", directory_path)
         return directory_path
@@ -125,7 +125,8 @@ def get_snap_user_directory_path(relative_path):
 
 
 def is_snap():
-    return os.environ.get('SNAP_NAME', '') == os.environ.get('TRANSACTION_DECORATOR_SNAP_NAME', '')
+    return ('TRANSACTION_DECORATOR_SNAP_NAME' in os.environ
+            and os.environ.get('SNAP_NAME', '') == os.environ.get('TRANSACTION_DECORATOR_SNAP_NAME', ''))
 
 
 def change_to_user_directory():

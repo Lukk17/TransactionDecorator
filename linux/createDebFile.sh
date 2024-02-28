@@ -2,7 +2,7 @@
 
 # Project configuration
 PROJECT_ROOT=$(pwd)  # Assumes the script is run from the project root
-PACKAGE_NAME="TransactionDecorator"
+PACKAGE_NAME="transaction-decorator"
 PACKAGE_VERSION="1.0.0"
 BUILD_DIR="$PROJECT_ROOT/build/$PACKAGE_NAME"
 FINAL_DEB="$PROJECT_ROOT/build/${PACKAGE_NAME}_${PACKAGE_VERSION}.deb"
@@ -16,14 +16,12 @@ mkdir -p "$BUILD_DIR/usr/lib/$PACKAGE_NAME"
 mkdir -p "$BUILD_DIR/usr/share/applications"
 
 mkdir -p "$RESOURCE_DIR/backup"
-mkdir -p "$RESOURCE_DIR/icons"
 mkdir -p "$RESOURCE_DIR/csv"
 mkdir -p "$RESOURCE_DIR/dictionary"
 
-
 # Copy application scripts and resources
 cp -r "$PROJECT_ROOT/src/." "$BUILD_DIR/usr/lib/$PACKAGE_NAME/src/"
-cp -r "$PROJECT_ROOT/icons/." "$RESOURCE_DIR/icons/"
+cp -r "$PROJECT_ROOT/icons/." "$BUILD_DIR/usr/lib/$PACKAGE_NAME/icons/"
 cp "$PROJECT_ROOT/csv/allTransactions.csv" "$RESOURCE_DIR/csv/"
 cp -r "$PROJECT_ROOT/dictionary/." "$RESOURCE_DIR/dictionary/"
 
@@ -31,11 +29,8 @@ cp -r "$PROJECT_ROOT/dictionary/." "$RESOURCE_DIR/dictionary/"
 cat > "$BUILD_DIR/usr/bin/$PACKAGE_NAME" << EOF
 #!/bin/bash
 
-# Set PYTHONPATH to include the directory where your Python packages are located
-export PYTHONPATH=$PYTHONPATH:/usr/lib/TransactionDecorator
-
 # Execute your main Python script
-python3 /usr/lib/TransactionDecorator/src/gui.py
+python3 /usr/lib/$PACKAGE_NAME/src/gui.py
 EOF
 chmod +x "$BUILD_DIR/usr/bin/$PACKAGE_NAME"
 
@@ -55,15 +50,12 @@ cat > "$BUILD_DIR/usr/share/applications/$PACKAGE_NAME.desktop" << EOF
 Version=1.0
 Type=Application
 Name=Transaction Decorator
-Exec=/usr/bin/TransactionDecorator
-Icon=/usr/share/$PACKAGE_NAME/icons/logo.png
+Exec=/usr/bin/$PACKAGE_NAME
+Icon=/usr/lib/$PACKAGE_NAME/icons/logo.png
 Categories=Utility;
 EOF
 
 # Build the .deb package
 dpkg-deb --build "$BUILD_DIR" "$FINAL_DEB"
-
-# Clean up
-#rm -rf "$BUILD_DIR"
 
 echo "Package built at $FINAL_DEB"

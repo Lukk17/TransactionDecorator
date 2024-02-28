@@ -11,7 +11,22 @@
 ./linux/createDebFile.sh 
 ```
 
-It will build .deb file in `/build` folder in project root directory
+It will build .deb file in `/build` folder in project root directory.  
+
+To install run:
+```shell
+sudo apt install ./build/transaction-decorator_1.0.0.deb 
+```
+To run:
+```shell
+transaction-decorator
+```
+or from all apps.  
+
+To remove run:
+```shell
+sudo apt remove transaction-decorator
+```
 
 In `/linux/debian/` directory there is project structure as will be built with a script.  
 This is only for preview, it is possible to create debian package this way, 
