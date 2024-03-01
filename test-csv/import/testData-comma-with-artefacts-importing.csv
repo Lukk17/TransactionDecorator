@@ -25,7 +25,7 @@ PLN;85 878,98;-86 742,81;
 
 Kryteria transakcji : Okres : 01-01-2024 - 23-01-2024;Typ transakcji: Uznania/Obci¹¿enia,;Produkty: 20249000050000400039037040 ; 31249010440000420065592618 ; 64249000050000400047951712 ; 84249000050000400072867451,
 
-#Data operacji,Wallet,Category name,#Kwota,Currency,Szczegó³y transakcji,Labels,Author,
+#Data operacji,Wallet,Category name,#Kwota,Currency,Szczegó³y transakcji,Labels,Author,;
 12.10.2023 20:44,MyWallet,Shopping,-99.0,PLN,BLIK - p?atno?? w internecie [GOGcomECOM],,Lukk
 11.10.2023 20:44,MyWallet,Salary,1000.0,PLN,Przelew ?rodków zabka,,Lukk
 2023-10-13T10:00:00+00:00,MyWallet,Income,400.00000000,PLN,Przelew na telefon BLIK, PL94109028510000000148599703, EGO 5/83 02-112 WARSZAWA,,Lukk

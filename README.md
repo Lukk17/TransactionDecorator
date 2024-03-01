@@ -13,6 +13,8 @@ In ``dictionary`` folder there is json file called `labels-dictionary.json`
 Project structure for development you can see [here](#structure-for-development) 
 and for installing [here](#structure-of-folders-and-files-after-installation-which-are-required-for-app-to-work)
 
+`src` folder should be marked as "Sources Root" in IDE (that way imports will be correctly visible by IDE)
+
 Run configurations for IDE are stored in `.run` folder.  
 You can find ones for:
  * direct launch app via python script
@@ -44,29 +46,25 @@ python -m unittest discover -s test
 ## Installing on Windows
 
 ### Installing required packages into PyInstaller:
+(It is always needed after reinstalling or updating python or python plugin in IDE)  
 As ADMIN (terminal)
+terminal path should be in same directory as `setup.py` file (project root directory)
 ```shell
-pip install -r ./src/requirements.txt
+pip install -e .
 ```
 
 To create requirements with a current python local installation type:
 ```shell
 pip freeze > requirements.txt
 ```
+Then copy them into `install_requires` part of `setup.py`
 
 ### Creating Windows `.exe` file:
 
 The Terminal needs to be in the main project directory (for an app icon relative path to work)
 
 ```shell
-pyinstaller --distpath "windows/entrypoint/" TransactionDecorator.spec
-
-```
-
-Alternative: using this will compile but ignore `TransactionDecorator.spec` recreating it with blank values.  
-There can be problems with lack of some library. 
-```powershell
-pyinstaller --noconsole --onefile --name "TransactionDecorator" --icon "./icons/logo.ico" --distpath "windows/entrypoint/" src/gui.py
+pyinstaller --distpath "./" TransactionDecorator.spec
 ```
 
 Compiled `TransactionDecorator.exe` file will be in `./windows/entrypoint/` folder.  
@@ -74,19 +72,102 @@ It will be not working correctly if there are no folders `icons, dictionary, csv
 For testing without using Installer, you need to mimic folder structure.
 See Windows app [structure](#structure-of-folders-and-files-after-installation-which-are-required-for-app-to-work)
 
-
 ### Windows Installer
 
 Inno Setup script is located in `windows/installer/installScript.iss`.  
 1. You can open this script via Inno Setup application and build it by pressing `F9` key or clicking button `Run`
 2. Or build via terminal started in project main directory:
     ```powershell
-    & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\windows\installer\installScript.iss"
+    & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\windows\installer\windowsInstallScript.iss"
     ```
 -------------------------
 
 ## Structure of folders and files after installation which are required for app to work
 
+## Project structure (for development)
+```text
+/Project main folder
+├── backup/                                                 # Directory for backup-related files
+│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
+│
+├── csv/                                                    # Directory for CSV files
+│   ├── allTransactions.csv                                     # Example CSV file
+│   └── template.csv                                            # Template CSV file
+│
+├── dictionary/                                             # Directory for dictionary-related files
+│   ├── categories-dictionary.json                               # Categories dictionary file
+│   ├── import-dictionary.json                                   # Import dictionary file
+│   └── labels-dictionary.json                                   # Labels dictionary file
+│
+├── icons/                                                  # Directory for icon files
+│   ├── close.png                                               # Icon for GUI
+│   ├── csv-file.png                                            # Icon for GUI
+│   ├── dictionary.png                                          # Icon for GUI
+│   ├── file-backup.png                                         # Icon for GUI
+│   ├── logo.ico                                                # Main icon file
+│   ├── logo.png
+│   ├── maximize.png                                            # Icon for GUI
+│   ├── minimize.png                                            # Icon for GUI
+│   └── restore.png     
+│
+├── linux/                                                  # Directory for linux installers
+│   ├── snap/                                                   # Directory for snap installer
+│   │   ├── user-data/                                              # Directory for user data scripts
+│   │   │   └── user-data-copy.sh                                       # Script for copying user data files when running snap
+│   │   ├── transaction-decorator-entrypoint                        # Entry point script for snap app
+│   │   └── transaction_decorator.desktop                           # Desktop shortcut for snap app
+│   ├── createDebFile.sh                                        # Script for creating debian/ubuntu .deb package
+│   └── linux.md                                                # Readme file with linux installation tips
+│
+├── src/                                                    # Source files - python scripts
+│   ├── config/                                              
+│   │    ├── constants.py                                              
+│   │    └── style_config.py
+│   ├── gui_elements/    
+│   │    ├── confirmation_dialog.py                                                                                  
+│   │    ├── title_bar.py                                                                                      
+│   │    └── widget_assembler.py  
+│   ├── processor/    
+│   │    ├── process_import.py                                                                                                                                                                      
+│   │    └── process_transactions.py       
+│   ├── utils/      
+│   │    └── utils.py                                                                                                                                                                                                                                                                                                                              
+│   └── gui.py                                                  # Main python script - launch app via it
+│
+├── test-csv/                                               # Folder with prepared csv for app testing
+│   ├── import/                                                 # CSV files ready to be imported in app
+│   │   ├── testData-comma-with-artefacts-importing.csv
+│   │   ├── testData-processing.csv                                 # Best CSV app to check overall importing and processing
+│   │   └── testData-semicolon-with-artefacts-importing.csv
+│   ├── processed-examples/                                     # CSV for comparison after processing imported testData-processing.csv
+│   │   ├── correctly-force-all-processed.csv
+│   │   ├── correctly-force-categories-processed.csv
+│   │   ├── correctly-force-labels-processed.csv
+│   │   ├── correctly-noforce-english-decimal-processed.csv
+│   │   └── correctly-noforce-standard-decimal-processed.csv
+│
+├── windows/
+│   ├── entrypoint/                                          # Folder for generating TransactionDecorator.exe file
+│   │    └── [generated] TransactionDecorator.exe            # Generated by PyInstaller                                                                                                                                                                                                                                                                                                                
+│   └── installer/                                              
+│        ├── windowsInstallScript.iss                        # Inno Setup script for compiling windows installer                                                                                                                                                                                                                                                                                             
+│        └── [generated] TransactionDecoratorInstaller.exe   # Windows Installer                                                                                                                                                                                                                                                                                                                       
+│
+├── .gitignore                                                
+│
+├── README.md                                                # This file
+│
+├── setup.py                                                 # List of python requirements libs
+│
+├── snapcraft.yaml                                           # Script for creating Linux snap installer
+│
+├── [generated] TransactionDecorator.exe                     # Generated by PyInstaller 
+│
+└── TransactionDecorator.spec                                # Specification file for PyInstaller 
+```
+
+### Structure of installed app on Windows:
+Source files:
 ```text
 InstallFolder/
 │
@@ -102,34 +183,25 @@ InstallFolder/
     ├── minimize.png                                            # Icon for GUI
     └── restore.png                                             # Icon for GUI                                            
 ```
+User data files:
 ```text
-<userHome>/AppData/Roaming/TransactionDecorator folder
+<userHome>/AppData/Roaming/TransactionDecorator/
 ├── backup/                                                 # Directory for backup-related files
 │   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
 │
 ├── csv/                                                    # Directory for CSV files
 │   └── allTransactions.csv                                     # Example CSV file
 │
-├── dictionary/                                             # Directory for dictionary-related files
-│   ├── categories-dictionary.json                               # Categories dictionary file
-│   ├── import-dictionary.json                                   # Import dictionary file
-│   └── labels-dictionary.json                                   # Labels dictionary file
+└── dictionary/                                             # Directory for dictionary-related files
+    ├── categories-dictionary.json                               # Categories dictionary file
+    ├── import-dictionary.json                                   # Import dictionary file
+    └── labels-dictionary.json                                   # Labels dictionary file
 ```
 
-## Structure for development
+### Structure of installed app via .deb package on Linux:
+Source files:
 ```text
-/Project main folder
-├── backup/                                                 # Directory for backup-related files
-│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
-│
-├── csv/                                                    # Directory for CSV files
-│   └── allTransactions.csv                                     # Example CSV file
-│
-├── dictionary/                                             # Directory for dictionary-related files
-│   └── categories-dictionary.json                               # Categories dictionary file
-│   └── import-dictionary.json                                   # Import dictionary file
-│   └── labels-dictionary.json                                   # Labels dictionary file
-│
+/usr/lib/transaction-decorator/
 ├── icons/                                                  # Directory for icon files
 │   ├── logo.ico                                                # Main icon file
 │   ├── logo.png
@@ -139,42 +211,85 @@ InstallFolder/
 │   ├── file-backup.png                                         # Icon for GUI
 │   ├── maximize.png                                            # Icon for GUI
 │   ├── minimize.png                                            # Icon for GUI
-│   └── restore.png     
-│
-├── src/
-│   ├── gui.py                                              # Main python script - launch app via it
-│   ├── requirements.txt                                    # Python library requirements need project to work
-│   ├── config/                                              
-│   │    ├── constants.py                                              
-│   │    └── style_config.py
-│   ├── gui_elements/    
-│   │    ├── confirmation_dialog.py                                                                                  
-│   │    ├── title_bar.py                                                                                      
-│   │    └── widget_assembler.py  
-│   ├── processor/    
-│   │    ├── process_import.py                                                                                                                                                                      
-│   │    └── process_transactions.py       
-│   └── utils/      
-│        └── utils.py                                                                                                                                                                                                                                                                                                                              
-│
-├── windows/
-│   ├── entrypoint                                           # Folder for generating TransactionDecorator.exe file
-│        └── [generated] TransactionDecorator.exe            # Generated by PyInstaller                                                                                                                                                                                                                                                                                                                
-│   └── installer                                              
-│        ├── installScript.iss                               # Inno Setup script for compiling windows installer                                                                                                                                                                                                                                                                                             
-│        └── [generated] TransactionDecoratorInstaller.exe   # Windows Installer                                                                                                                                                                                                                                                                                                                       
-│
-├── .gitignore                                                
-│
-├── README.md                                                # This file
-│
-└── TransactionDecorator.spec                                # Specification file for PyInstaller 
+│   └── restore.png                                             # Icon for GUI        
+└── src/                                                    # All python scripts from project src directory                                  
 ```
+User data files:
+```text
+/usr/share/transaction-decorator/
+├── backup/                                                 # Directory for backup-related files
+│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
+│
+├── csv/                                                    # Directory for CSV files
+│   └── allTransactions.csv                                     # Example CSV file
+│
+└── dictionary/                                             # Directory for dictionary-related files
+    ├── categories-dictionary.json                               # Categories dictionary file
+    ├── import-dictionary.json                                   # Import dictionary file
+    └── labels-dictionary.json                                   # Labels dictionary file
+```
+
+
+### Structure of installed app via snap on Linux:
+Source and install files:
+```text
+/snap/transaction-decorator/current/
+├── meta/                                                   # Meta directory created by snap when installing
+│   ├── gui/
+│   │   └── transaction-decorator.desktop                       # Desktop shortcut template used by snap installer 
+│   └── snap.yaml                                           # File created from snapcraft.yaml during snap install
+│
+├── user-data/
+│   └── user-data-copy.sh                                       # Script for copying user data when running snap
+│
+├── usr/
+│   ├── bin/
+│   │   └── transaction-decorator-entrypoint                        # Entrypoint starting app
+│   ├── lib/transaction-decorator/src/                          # All python scripts from project src directory
+│   ├── local/lib/python3.x                                     # Compiled python scripts
+│   └── share/                                                  # Content for install only, NOT used by running app 
+│       ├── application/
+│       │   └── transaction-decorator.desktop                           # Desktop shortcut template used by snap installer
+│       └── transaction-decorator/
+│           ├── csv/
+│           │   └── allTransactions.csv                                     # Example CSV file
+│           ├── dictionary/ 
+│           │   ├── categories-dictionary.json                               # Categories dictionary file
+│           │   ├── import-dictionary.json                                   # Import dictionary file
+│           │   └── labels-dictionary.json                                   # Labels dictionary file
+│           └── icons/                                                  # Directory for icon files
+│               ├── logo.ico                                                # Main icon file
+│               ├── logo.png
+│               ├── close.png                                               # Icon for GUI
+│               ├── csv-file.png                                            # Icon for GUI
+│               ├── dictionary.png                                          # Icon for GUI
+│               ├── file-backup.png                                         # Icon for GUI
+│               ├── maximize.png                                            # Icon for GUI
+│               ├── minimize.png                                            # Icon for GUI
+│               └── restore.png                                             # Icon for GUI        
+│
+└── template.csv                                               # Template CSV file                                         
+```
+User data files:
+```text
+~/snap/transaction-decorator/current/
+├── backup/                                                 # Directory for backup-related files
+│   └── allTransactions.csv_XXX.csv                             # Example file in backup directory
+│
+├── csv/                                                    # Directory for CSV files
+│   └── allTransactions.csv                                     # Example CSV file
+│
+└── dictionary/                                             # Directory for dictionary-related files
+    ├── categories-dictionary.json                               # Categories dictionary file
+    ├── import-dictionary.json                                   # Import dictionary file
+    └── labels-dictionary.json                                   # Labels dictionary file
+```
+
 -------------------------
 
 ## Troubleshooter
 
-1. Lack of a library in exe file  
+### 1. Lack of a library in exe file  
    If when launched .exe file with app error occurs that there is lack of any python library,  
    edit `TransactionDecorator.spec` file and add a missing library to `hiddenimports=['chardet'],` section.  
    Then run:  
@@ -188,4 +303,4 @@ InstallFolder/
       pyinstaller TransactionDecorator.spec
    ```
    And now try again to compile pyinstaller.
-2. 
+

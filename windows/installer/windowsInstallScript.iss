@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "TransactionDecorator"
-#define MyAppVersion "0.1.0"
+#define MyAppVersion "1.0.0"
 #define MyAppPublisher "Lukk"
 #define MyAppURL "luksarna.com"
 #define MyAppExeName "TransactionDecorator.exe"
@@ -38,7 +38,7 @@ Name: "polish"; MessagesFile: "compiler:Languages\Polish.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "..\entrypoint\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\..\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\..\csv\allTransactions.csv"; DestDir: "{userappdata}\{#MyAppName}\csv"; Flags: ignoreversion
 Source: "..\..\dictionary\*"; DestDir: "{userappdata}\{#MyAppName}\dictionary"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\icons\*"; DestDir: "{app}\icons"; Flags: ignoreversion recursesubdirs createallsubdirs

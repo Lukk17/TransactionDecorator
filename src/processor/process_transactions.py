@@ -6,8 +6,8 @@ from datetime import datetime
 
 import pandas as pd
 
-import src.config.constants as cts
-from src.utils.utils import user_directory_path, normalize_number_format
+import config.constants as cts
+from utils.utils import user_directory_path, normalize_number_format
 
 
 def normalize_string(s):

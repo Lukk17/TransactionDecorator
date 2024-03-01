@@ -2,7 +2,7 @@ from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
 
-import src.config.constants as cts
+import config.constants as cts
 
 
 def get_main_stylesheet():

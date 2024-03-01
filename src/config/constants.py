@@ -39,14 +39,14 @@ RESTORE_ICON_PATH = 'icons/restore.png'
 MINIMIZE_ICON_PATH = 'icons/minimize.png'
 CLOSE_ICON_PATH = 'icons/close.png'
 
-ICON_CSV_PATH = './icons/csv-file.png'
-ICON_BACKUP_PATH = './icons/file-backup.png'
-ICON_DICTIONARY_PATH = './icons/dictionary.png'
+ICON_CSV_PATH = 'icons/csv-file.png'
+ICON_BACKUP_PATH = 'icons/file-backup.png'
+ICON_DICTIONARY_PATH = 'icons/dictionary.png'
 
 # External / User constants paths
-DICTIONARY_DIRECTORY_PATH = './dictionary'
-FILE_BACKUP_DIRECTORY_PATH = './backup'
-CSV_FILE_DIRECTORY_PATH = './csv'
+DICTIONARY_DIRECTORY_PATH = 'dictionary'
+FILE_BACKUP_DIRECTORY_PATH = 'backup'
+CSV_FILE_DIRECTORY_PATH = 'csv'
 
 CATEGORIES_DICTIONARY_NAME = 'categories-dictionary.json'
 LABELS_DICTIONARY_NAME = 'labels-dictionary.json'

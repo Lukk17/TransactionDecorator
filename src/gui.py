@@ -1,10 +1,10 @@
 from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget)
 
-from src.config.style_config import get_app_style, get_process_button_style
-from src.gui_elements.title_bar import TitleBar
-from src.gui_elements.widget_assembler import *
-from src.processor.process_transactions import *
-from src.utils.utils import resource_path
+from config.style_config import get_app_style, get_process_button_style
+from gui_elements.title_bar import TitleBar
+from gui_elements.widget_assembler import *
+from processor.process_transactions import *
+from utils.utils import resource_path, change_to_user_directory
 
 
 class FramelessMainWindow(QMainWindow):
@@ -31,53 +31,62 @@ class FramelessMainWindow(QMainWindow):
         self.title_bar = TitleBar(self)
         self.main_layout.addWidget(self.title_bar, alignment=Qt.AlignTop)
 
-        # Content Widget and Layout
-        self.content_widget = QWidget()
-
-        # Placing content_widget (which will contain other widgets or layouts)
-        # within the space managed by the content_layout.
-        # Widgets and layouts that are added to content_layout will appear within content_widget.
-        self.content_layout = QVBoxLayout(self.content_widget)
-
         # Directory Buttons
-        self.dir_buttons_layout, self.csv_button = create_dir_buttons(self)
-
-        self.content_layout.addLayout(self.dir_buttons_layout)
-
-        # QVBoxLayout for vertical, QHBoxLayout for horizontal
-        self.input_fields_layout = QHBoxLayout()
-
-        # First Row Input
-        self.first_row_input_field, self.first_row_layout = create_labeled_input('%s' % cts.FIRST_ROW_LABEL, '1')
-
-        self.input_fields_layout.addLayout(self.first_row_layout)
-
-        # Last Row Input
-        self.last_row_input_field, self.last_row_layout = create_labeled_input('%s' % cts.LAST_ROW_LABEL, '')
-        self.input_fields_layout.addLayout(self.last_row_layout)
-
-        self.content_layout.addLayout(self.input_fields_layout)
-
-        (self.english_decimal_separator_layout,
-         self.english_decimal_separator_checkbox) = create_english_decimal_separator(self)
-
-        (self.force_update_layout,
-         self.force_update_categories_checkbox,
-         self.force_update_labels_checkbox) = create_force_update(self)
-
-        self.content_layout.addLayout(self.force_update_layout)
-        self.content_layout.addLayout(self.english_decimal_separator_layout)
+        self.dir_buttons_widget = self.setup_buttons_widget()
+        self.input_fields_widget = self.setup_input_fields_widget()
+        self.english_decimal_separator_widget = self.setup_english_decimal_separator_widget()
+        self.force_update_widget = self.setup_force_update_widget()
 
         # Process Button
         self.process_button = self.create_process_button()
+
+        self.content_widget = QWidget()
+        self.content_layout = QVBoxLayout(self.content_widget)
+
+        self.content_layout.addWidget(self.dir_buttons_widget)
+        self.content_layout.addWidget(self.input_fields_widget)
+        self.content_layout.addWidget(self.english_decimal_separator_widget)
+        self.content_layout.addWidget(self.force_update_widget)
         self.content_layout.addWidget(self.process_button)
 
         # Add content to the main layout
         # Widget needs to be added to the layout to be visible,
-        # adding content_layout to main_layout will not show widgets in it
         self.main_layout.addWidget(self.content_widget)
 
         self.set_style()
+
+    def setup_force_update_widget(self):
+        force_update_widget = QWidget()
+        (self.force_update_layout,
+         self.force_update_categories_checkbox,
+         self.force_update_labels_checkbox) = create_force_update(force_update_widget)
+        force_update_widget.setLayout(self.force_update_layout)
+        return force_update_widget
+
+    def setup_english_decimal_separator_widget(self):
+        english_decimal_separator_widget = QWidget()
+        (self.english_decimal_separator_layout,
+         self.english_decimal_separator_checkbox) = create_english_decimal_separator(english_decimal_separator_widget)
+        english_decimal_separator_widget.setLayout(self.english_decimal_separator_layout)
+        return english_decimal_separator_widget
+
+    def setup_input_fields_widget(self):
+        input_fields_widget = QWidget()
+        self.input_fields_layout = QHBoxLayout()
+        # First Row Input
+        self.first_row_input_field, self.first_row_layout = create_labeled_input('%s' % cts.FIRST_ROW_LABEL, '1')
+        self.input_fields_layout.addLayout(self.first_row_layout)
+        # Last Row Input
+        self.last_row_input_field, self.last_row_layout = create_labeled_input('%s' % cts.LAST_ROW_LABEL, '')
+        self.input_fields_layout.addLayout(self.last_row_layout)
+        input_fields_widget.setLayout(self.input_fields_layout)
+        return input_fields_widget
+
+    def setup_buttons_widget(self):
+        dir_buttons_widget = QWidget()
+        self.dir_buttons_layout, self.csv_button = create_dir_buttons(dir_buttons_widget)
+        dir_buttons_widget.setLayout(self.dir_buttons_layout)
+        return dir_buttons_widget
 
     def set_style(self):
         self.setStyleSheet(get_app_style())
@@ -110,19 +119,20 @@ class FramelessMainWindow(QMainWindow):
         # Programmatically trigger a click on the csv_button
         self.csv_button.click()
 
-    # Window movement methods
-    def mousePressEvent(self, event):
-        if event.button() == Qt.LeftButton:
-            self.m_dragPosition = event.globalPosition().toPoint()
-
-    def mouseMoveEvent(self, event):
-        if event.buttons() == Qt.LeftButton:
-            self.move(self.pos() + event.globalPosition().toPoint() - self.m_dragPosition)
-            self.m_dragPosition = event.globalPosition().toPoint()
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = FramelessMainWindow()
+
+    change_to_user_directory()
+
+    print("")
+    print("[gui] sys.path:", sys.path)  # Show all search paths
+    print("[gui] PYTHONPATH:", os.environ.get('PYTHONPATH'))
+    print("")
+    print("[gui] platform: ", sys.platform)
+    print("[gui] Current Working Directory:", os.getcwd())
+
     window.show()
     sys.exit(app.exec())

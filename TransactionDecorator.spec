@@ -3,10 +3,24 @@
 
 a = Analysis(
     ['src\\gui.py'],
-    pathex=[],
+    pathex=['.'], # Assuming the .spec file is in the project root
     binaries=[],
-    datas=[],
-    hiddenimports=['chardet'],
+    datas=[
+        ('src/config/*', 'config/'),
+        ('src/gui_elements/*', 'gui_elements/'),
+        ('src/processor/*', 'processor/'),
+        ('src/utils/*', 'utils/')
+    ],
+    hiddenimports=[
+        'chardet',
+        'json',
+        'pandas',
+        'PySide6',
+        'PySide6.QtWidgets',
+        'PySide6.QtGui',
+        'PySide6.QtCore',
+        'numpy'
+        ],
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],

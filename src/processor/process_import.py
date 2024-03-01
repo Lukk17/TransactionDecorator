@@ -7,14 +7,14 @@ import numpy as np
 import pandas as pd
 from PySide6.QtWidgets import (QFileDialog)
 
-import src.config.constants as cts
-from src.utils.utils import user_directory_path, normalize_number_format
+import config.constants as cts
+from utils.utils import user_directory_path, normalize_number_format
 
 
 def import_csv(main_window):
     # Import moved here due to circular import issue when imported as global one
-    from src.gui_elements.widget_assembler import create_pop_up
-    from src.gui_elements.widget_assembler import create_input_dialog
+    from gui_elements.widget_assembler import create_pop_up
+    from gui_elements.widget_assembler import create_input_dialog
 
     file_name, _ = QFileDialog.getOpenFileName(main_window, "%s" % cts.OPEN_CSV_DIALOG_WINDOW_NAME, "",
                                                "%s" % cts.OPEN_CSV_DIALOG_DEFAULT_FILE_FORMAT)

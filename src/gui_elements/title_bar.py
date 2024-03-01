@@ -1,13 +1,14 @@
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QFrame, QHBoxLayout, QPushButton
-import src.config.constants as cts
-from src.utils.utils import resource_path
+import config.constants as cts
+from utils.utils import resource_path
 
 
 class TitleBar(QFrame):
     def __init__(self, parent=None):
         super().__init__(parent)
+
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)  # No margins
         self.layout.setSpacing(0)  # No spacing between widgets
@@ -80,3 +81,4 @@ class TitleBar(QFrame):
         else:
             self.showMaximized()
             button.setIcon(restore_icon)
+
