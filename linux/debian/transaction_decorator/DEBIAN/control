@@ -1,6 +1,0 @@
-Package: TransactionDecorator
-Version: 1.0.0
-Architecture: amd64
-Maintainer: Lukk <luksarna@gmail.com>
-Depends: python3, python3-pandas, python3-numpy, python3-matplotlib, python3-chardet, libxcb-xinerama0, libxcb1, libx11-xcb1, libglu1-mesa, libxrender1, libxi6
-Description: A tool to decorate financial transactions and analyze them.
