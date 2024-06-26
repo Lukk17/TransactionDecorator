@@ -137,7 +137,7 @@ def change_to_user_directory():
         print(f"Failed to change directory: {e}")
 
 
-def normalize_number_format(s, english_decimal_separator=True):
+def normalize_number_format(s, dot_decimal_separator=True):
     """
     Normalizes mixed number formats to a consistent format.
 
@@ -154,17 +154,16 @@ def normalize_number_format(s, english_decimal_separator=True):
 
     # Pattern to identify English format (e.g., 1,234.56)
     eng_format = re.compile(r'^-?\d{1,3}(?:,\d{3})*\.?\d*$')
-
     if standard_format.match(s):
-        if english_decimal_separator:
-            # Convert from standard to English format
+        if dot_decimal_separator:
+            # Convert from standard to dot format
             return s.replace('.', '').replace(',', '.')
         else:
             # Already in Euro format, remove dots if needed
             return s.replace('.', '')
 
     elif eng_format.match(s):
-        if english_decimal_separator:
+        if dot_decimal_separator:
             # Already in English format, remove commas if needed
             return s.replace(',', '')
         else:
@@ -172,9 +171,15 @@ def normalize_number_format(s, english_decimal_separator=True):
             return s.replace(',', '').replace('.', ',')
     else:
         print(f"Warning: weird format of number: '{s}' - trying to convert anyway..")
-        if english_decimal_separator:
+        if dot_decimal_separator:
             # Convert to English format
             return s.replace(',', '.')
         else:
             # Convert to standard format with comma as decimal separator
             return s.replace('.', ',')
+
+
+def create_original_csv(file_path):
+    headers = cts.CSV_HEADERS
+    with open(file_path, 'w', encoding=cts.DEFAULT_ENCODING) as f:
+        f.write(headers)

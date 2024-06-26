@@ -3,7 +3,7 @@ APP_NAME = 'TransactionDecorator'
 # Processing constants
 CSV_DELIMITER = ';'
 LABELS_DELIMITER = ','
-DEFAULT_ENCODING = 'UTF-8'
+DEFAULT_ENCODING = 'utf-8'
 NOTE_COLUMN = 'Note'
 LABELS_COLUMN = 'Labels'
 DATE_COLUMN = 'Date'
@@ -22,6 +22,8 @@ DELIMITERS_LIST = [";", ","]
 ERROR_PARSING_CSV = "Error parsing CSV file in line:"
 ERROR_IMPORTING_CSV = ("There was error during parsing - try different delimiter when importing. "
                        "\nError importing CSV file in line:")
+
+CSV_HEADERS = "Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author"
 
 INPUT_DATE_FORMATS = [
     "%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%d.%m.%Y %H:%M", "%Y-%m-%dT%H:%M:%S+00:00",
@@ -51,7 +53,15 @@ CSV_FILE_DIRECTORY_PATH = 'csv'
 CATEGORIES_DICTIONARY_NAME = 'categories-dictionary.json'
 LABELS_DICTIONARY_NAME = 'labels-dictionary.json'
 IMPORT_DICTIONARY_NAME = 'import-dictionary.json'
+IGNORE_DICTIONARY_NAME = 'ignore-dictionary.json'
 TRANSACTION_CSV_NAME = 'allTransactions.csv'
+
+IMPORT_COLUMN_MAPPING_PARAM_NAME = 'column_mapping'
+
+IGNORE_IGNORE_RULES_PARAM_NAME = 'ignore_rules'
+IGNORE_CONDITION_PARAM_NAME = 'conditions'
+IGNORE_COLUMN_PARAM_NAME = 'column'
+IGNORE_VALUE_PARAM_NAME = 'value'
 
 # UI setup ----------------------------------------------------------
 MAIN_WINDOW_TITLE = "CSV Processing"

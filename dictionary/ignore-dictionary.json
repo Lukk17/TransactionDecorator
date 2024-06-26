@@ -1,0 +1,36 @@
+{
+  "ignore_rules": [
+    {
+      "conditions": [
+        {
+          "column": "Nazwa nadawcy",
+          "value": "RevDev Solution Łukasz Sarna"
+        },
+        {
+          "column": "Szczegóły transakcji",
+          "value": "Przelew środków"
+        },
+        {
+          "column": "Nazwa odbiorcy",
+          "value": "Łukasz Sarna"
+        }
+      ]
+    },
+    {
+      "conditions": [
+        {
+          "column": "Nazwa nadawcy",
+          "value": "RevDev Solution £ukasz Sarna"
+        },
+        {
+          "column": "Szczegó³y transakcji",
+          "value": "Przelew œrodków"
+        },
+        {
+          "column": "Nazwa odbiorcy",
+          "value": "£ukasz Sarna"
+        }
+      ]
+    }
+  ]
+}

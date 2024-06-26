@@ -10,7 +10,7 @@ from PySide6.QtWidgets import (QHBoxLayout, QPushButton, QLabel, QLineEdit, QVBo
 import config.constants as cts
 from config.style_config import get_checkbox_style, get_import_dialog_style
 from gui_elements.confirmation_dialog import ConfirmationDialog
-from processor.process_import import import_csv
+from processor.transactions_importer import import_csv
 from utils.utils import user_directory_path, resource_path
 
 

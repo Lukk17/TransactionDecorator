@@ -3,7 +3,7 @@
 # Project configuration
 PROJECT_ROOT=$(pwd)  # Assumes the script is run from the project root
 PACKAGE_NAME="transaction-decorator"
-PACKAGE_VERSION="1.0.0"
+PACKAGE_VERSION="1.0.1"
 BUILD_DIR="$PROJECT_ROOT/build/$PACKAGE_NAME"
 FINAL_DEB="$PROJECT_ROOT/build/${PACKAGE_NAME}_${PACKAGE_VERSION}.deb"
 RESOURCE_DIR="$BUILD_DIR/usr/share/$PACKAGE_NAME"

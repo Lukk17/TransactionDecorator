@@ -4,11 +4,18 @@
 Python with PySide6 GUI
 
 The App is taking csv file named `allTransaction.csv` in which all transactions should be listed in rows.  
+Transaction can be [imported](#importing-csv) from any CSV file.  
 CSV file need to have two columns `Note` and `Labels`, labels are computed based on notes.  
 
 App is creating backup of the original CSV file before processing in `backup` folder.
 
-In ``dictionary`` folder there is json file called `labels-dictionary.json`
+In ``dictionary`` folder there are json files called
+```
+categories-dictionary.json
+ignore-dictionary.json
+import-dictionary.json
+labels-dictionary.json
+```
 
 Project structure for development you can see [here](#structure-for-development) 
 and for installing [here](#structure-of-folders-and-files-after-installation-which-are-required-for-app-to-work)
@@ -26,8 +33,9 @@ You can find ones for:
 
 To import CSV, click the button "Import CSV".   
 Remember that:
- * CSV file needs to be in UTF-8 encoding and can't have any description lines at the beginning   
-   (often bank export csv have in first line some data about exporting which make file not valid CSV).  
+ * CSV file needs to be in UTF-8 encoding and can't have any description lines at the beginning.   
+   Often bank export csv have in the first line some data about exporting which make file not valid CSV.  
+   In the above case use Excel to import and then save as `CSV UTF-8` file.
  * Columns count should be correct.  
  * All rows should have the same number of columns (delimiters) as first, header row with column names.  
 
@@ -35,10 +43,59 @@ CSV will be parsed, a date format will be parsed to default one, and rows will b
 
 -------------------------
 
+## Ignoring data
+
+`ignore-dictionary.json` dictionary was added to make possible to ignore rows while importing.  
+If row is ignored it is not copied from imported CSV file into `allTransactions.csv`.  
+
+In json you can specify which columns with which values (and its combinations) should mark row as ignored.
+
+```json
+{
+  "ignore_rules": [
+    {
+      "conditions": [
+        {
+          "column": "Amount",
+          "value": "100"
+        },
+        {
+          "column": "Name",
+          "value": "VAT"
+        },
+        {
+          "column": "Currency",
+          "value": "PLN"
+        }
+      ]
+    },
+    {
+      "conditions": [
+        {
+          "column": "Category",
+          "value": "Food"
+        }
+      ]
+    }
+  ]
+}
+```
+in the above example ignored will be rows where in columns:  
+`Amount` have value `100` AND in column `Name` value `VAT` AND in column `Currency` value `PLN`  
+OR  
+in column `Category` have value `Food`
+
+---
+
 ## Running unit tests
 
-```shell
-python -m unittest discover -s test
+Just run files:
+```
+import_test.py
+```
+and
+```
+transaction_decorator_test.py
 ```
 
 -------------------------
@@ -46,9 +103,22 @@ python -m unittest discover -s test
 ## Installing on Windows
 
 ### Installing required packages into PyInstaller:
-(It is always needed after reinstalling or updating python or python plugin in IDE)  
-As ADMIN (terminal)
-terminal path should be in same directory as `setup.py` file (project root directory)
+
+Create python virtual env by going `File` > `Project structure..` > `SDK` > `+ Add SDK` > `Python SDK..` :  
+`Virtualenv Environment` > `New environment` (do not inherit packages) 
+
+If you use global env all packages will be copied into installer - and this can be large > 10 GB
+
+##### try to temporary, only for installing it delete:
+```
+C:\Python311\Lib\site-packages\custom_packages_location.pth
+```
+and
+```
+C:\ProgramData\pip\pip.ini
+```
+
+Terminal path should be in same directory as `setup.py` file (project root directory)
 ```shell
 pip install -e .
 ```
@@ -60,6 +130,17 @@ pip freeze > requirements.txt
 Then copy them into `install_requires` part of `setup.py`
 
 ### Creating Windows `.exe` file:
+
+You need to install `pyinstaller`:
+```
+pip install pyinstaller
+```
+if error 
+```
+pyinstaller: The term 'pyinstaller' is not recognized as a name of a cmdlet, function, script file, or executable program.
+Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+```
+see [this](#try-to-temporary-only-for-installing-it-delete)
 
 The Terminal needs to be in the main project directory (for an app icon relative path to work)
 
@@ -97,6 +178,7 @@ Inno Setup script is located in `windows/installer/installScript.iss`.
 ├── dictionary/                                             # Directory for dictionary-related files
 │   ├── categories-dictionary.json                               # Categories dictionary file
 │   ├── import-dictionary.json                                   # Import dictionary file
+│   ├── ignore-dictionary.json                                   # Import dictionary file
 │   └── labels-dictionary.json                                   # Labels dictionary file
 │
 ├── icons/                                                  # Directory for icon files
@@ -195,6 +277,7 @@ User data files:
 └── dictionary/                                             # Directory for dictionary-related files
     ├── categories-dictionary.json                               # Categories dictionary file
     ├── import-dictionary.json                                   # Import dictionary file
+    ├── ignore-dictionary.json                                   # Import dictionary file
     └── labels-dictionary.json                                   # Labels dictionary file
 ```
 
@@ -226,6 +309,7 @@ User data files:
 └── dictionary/                                             # Directory for dictionary-related files
     ├── categories-dictionary.json                               # Categories dictionary file
     ├── import-dictionary.json                                   # Import dictionary file
+    ├── ignore-dictionary.json                                   # Import dictionary file
     └── labels-dictionary.json                                   # Labels dictionary file
 ```
 
@@ -256,6 +340,7 @@ Source and install files:
 │           ├── dictionary/ 
 │           │   ├── categories-dictionary.json                               # Categories dictionary file
 │           │   ├── import-dictionary.json                                   # Import dictionary file
+│           │   ├── ignore-dictionary.json                                   # Import dictionary file
 │           │   └── labels-dictionary.json                                   # Labels dictionary file
 │           └── icons/                                                  # Directory for icon files
 │               ├── logo.ico                                                # Main icon file
@@ -282,6 +367,7 @@ User data files:
 └── dictionary/                                             # Directory for dictionary-related files
     ├── categories-dictionary.json                               # Categories dictionary file
     ├── import-dictionary.json                                   # Import dictionary file
+    ├── ignore-dictionary.json                                   # Import dictionary file
     └── labels-dictionary.json                                   # Labels dictionary file
 ```
 
