@@ -28,8 +28,12 @@ def resource_path(relative_path):
         # Specific adjustment for Linux deployment via .deb package
 
     elif sys.platform == "linux":
+        script_path = os.path.dirname(__file__)
         if is_snap():
             base_path = get_snap_base_path()
+        elif os.path.exists(os.path.join(os.path.abspath(script_path), '../../.idea')):
+            base_path = os.path.join(os.path.abspath(script_path), '../../')
+            print("[resource_path] IDE linux dev base path: ", base_path)
         else:
             print("[resource_path] running in linux")
             base_path = '/usr/lib/transaction-decorator'
@@ -53,6 +57,7 @@ def resource_path(relative_path):
 
 # Paths for external app files, specific to user like backup, csv, dictionary
 def user_directory_path(relative_path):
+    base_path = os.path.dirname(__file__)
     # If the application is run as a bundled executable (e.g., using PyInstaller)
     if getattr(sys, 'frozen', False):
         # snap can set frozen attribute
@@ -82,11 +87,11 @@ def user_directory_path(relative_path):
         if is_snap():
             return get_snap_user_directory_path(relative_path)
 
-        elif os.path.exists('../.idea'):
-            directory_path = resource_path(relative_path)
-
+        elif os.path.exists(os.path.join(os.path.abspath(base_path), '../../.idea')):
+            directory_path = os.path.join(os.path.abspath(base_path), '../../')
+            # directory_path = resource_path(relative_path)
             print("[user_directory_path] IDE linux dev path: ", directory_path)
-            return directory_path
+            return os.path.join(directory_path, relative_path)
 
         # For Linux, place user-specific data in the home directory
         directory_path = os.path.join('/usr/share', 'transaction-decorator', relative_path)

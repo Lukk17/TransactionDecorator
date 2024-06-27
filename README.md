@@ -22,7 +22,27 @@ and for installing [here](#structure-of-folders-and-files-after-installation-whi
 
 `src` folder should be marked as "Sources Root" in IDE (that way imports will be correctly visible by IDE)
 
+---
 
+## Release Versions
+
+versions are specified in files:
+
+Windows:
+```
+windows/installer/windowsInstallScript.iss
+```
+
+linux `.deb`:
+```
+linux/createDebFile.sh
+```
+
+snap:
+```
+snapcraft.yaml
+linux/snap/transaction_decorator.desktop
+```
 
 ---
 ## Run configurations

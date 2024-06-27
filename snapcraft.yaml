@@ -1,7 +1,7 @@
 # snap package name - need to be same in a path in TransactionDecorator sh entrypoint
 name: transaction-decorator
 base: core22
-version: '1.0.0'
+version: '1.0.1'
 summary: TransactionDecorator is a utility to decorate transactions.
 description: This application provides an interface for managing transactions.
 grade: stable
