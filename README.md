@@ -50,18 +50,46 @@ linux/snap/transaction_decorator.desktop
 Run configurations for IDE are stored in `.run` folder.  
 You can find ones for:
 * direct launch app via python script
-* building exe file by PyInstaller
-* building Windows installer by Inno Setup (via `.bat` script)
+* running tests
 
-PyInstaller is a simple shell script with script text:
+---
+
+## Installing on Windows
+
+### Installing required packages into PyInstaller:
+
+Create python virtual env by going `File` > `Project structure..` > `SDK` > `+ Add SDK` > `Python SDK..` :  
+`Virtualenv Environment` > `New environment` (do not inherit packages)
+
+If you use global env all packages will be copied into installer - and this can be large > 10 GB
+
+##### try to temporary, only for installing it delete:
 ```
-pyinstaller --distpath "./" TransactionDecorator.spec
+C:\Python311\Lib\site-packages\custom_packages_location.pth
 ```
-and working dir:
+and
 ```
-D:/Development/projekty-IT/TransactionDecorator
+C:\ProgramData\pip\pip.ini
 ```
-Not executing in terminal (checkbox not checked)
+
+Terminal path should be in same directory as `setup.py` file (project root directory)
+```shell
+pip install -e .
+```
+
+To create requirements with a current python local installation type:
+```shell
+pip freeze > requirements.txt
+```
+Then copy them into `install_requires` part of `setup.py`
+
+### Create `.exe` file and installer
+The easiest way will be using a script from root directory:
+```
+.\windows\installer\InstallerBuilder.bat
+```
+It Can be also done manually [PyInstaller](#pyinstaller-creating-exe-file) and [Inno Setup](#inno-setup-windows-installer)
+
 
 ---
 ## Importing CSV
@@ -133,38 +161,10 @@ and
 transaction_decorator_test.py
 ```
 
--------------------------
+---
 
-## Installing on Windows
-
-### Installing required packages into PyInstaller:
-
-Create python virtual env by going `File` > `Project structure..` > `SDK` > `+ Add SDK` > `Python SDK..` :  
-`Virtualenv Environment` > `New environment` (do not inherit packages) 
-
-If you use global env all packages will be copied into installer - and this can be large > 10 GB
-
-##### try to temporary, only for installing it delete:
-```
-C:\Python311\Lib\site-packages\custom_packages_location.pth
-```
-and
-```
-C:\ProgramData\pip\pip.ini
-```
-
-Terminal path should be in same directory as `setup.py` file (project root directory)
-```shell
-pip install -e .
-```
-
-To create requirements with a current python local installation type:
-```shell
-pip freeze > requirements.txt
-```
-Then copy them into `install_requires` part of `setup.py`
-
-### Creating Windows `.exe` file:
+### PyInstaller creating exe file
+Creating Windows `.exe` file:
 
 You need to install `pyinstaller`:
 ```
@@ -181,7 +181,7 @@ The Terminal needs to be in the main project directory (for an app icon relative
 
 use Run configuration for it or:
 ```shell
-pyinstaller --distpath "./" TransactionDecorator.spec
+pyinstaller --clean --distpath "./" TransactionDecorator.spec
 ```
 
 Compiled `TransactionDecorator.exe` file will be in `./windows/entrypoint/` folder.  
@@ -189,11 +189,12 @@ It will be not working correctly if there are no folders `icons, dictionary, csv
 For testing without using Installer, you need to mimic folder structure.
 See Windows app [structure](#structure-of-folders-and-files-after-installation-which-are-required-for-app-to-work)
 
-### Windows Installer
+---
+
+### Inno Setup Windows Installer
 
 Inno Setup script is located in `windows/installer/installScript.iss`.  
 
-Powershell script is located in `windows/installer/buildInstaller.ps1`
 
 1. You can open this script via Inno Setup application and build it by pressing `F9` key or clicking button `Run`
 2. Or use Run configuration, which will run `.bat` script
@@ -201,7 +202,7 @@ Powershell script is located in `windows/installer/buildInstaller.ps1`
     ```powershell
     & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\windows\installer\windowsInstallScript.iss"
     ```
--------------------------
+---
 
 ## Structure of folders and files after installation which are required for app to work
 
