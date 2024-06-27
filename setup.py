@@ -13,5 +13,6 @@ setup(
         'PySide6==6.6.0',
         'PySide6-Addons==6.6.0',
         'PySide6-Essentials==6.6.0',
+        'pytest==8.2.2',
     ]
 )

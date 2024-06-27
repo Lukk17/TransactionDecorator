@@ -22,13 +22,28 @@ and for installing [here](#structure-of-folders-and-files-after-installation-whi
 
 `src` folder should be marked as "Sources Root" in IDE (that way imports will be correctly visible by IDE)
 
+
+
+---
+## Run configurations
+
 Run configurations for IDE are stored in `.run` folder.  
 You can find ones for:
- * direct launch app via python script
- * building exe file by PyInstaller
- * building Windows installer by Inno Setup
+* direct launch app via python script
+* building exe file by PyInstaller
+* building Windows installer by Inno Setup (via `.bat` script)
 
--------------------------
+PyInstaller is a simple shell script with script text:
+```
+pyinstaller --distpath "./" TransactionDecorator.spec
+```
+and working dir:
+```
+D:/Development/projekty-IT/TransactionDecorator
+```
+Not executing in terminal (checkbox not checked)
+
+---
 ## Importing CSV
 
 To import CSV, click the button "Import CSV".   
@@ -144,6 +159,7 @@ see [this](#try-to-temporary-only-for-installing-it-delete)
 
 The Terminal needs to be in the main project directory (for an app icon relative path to work)
 
+use Run configuration for it or:
 ```shell
 pyinstaller --distpath "./" TransactionDecorator.spec
 ```
@@ -156,8 +172,12 @@ See Windows app [structure](#structure-of-folders-and-files-after-installation-w
 ### Windows Installer
 
 Inno Setup script is located in `windows/installer/installScript.iss`.  
+
+Powershell script is located in `windows/installer/buildInstaller.ps1`
+
 1. You can open this script via Inno Setup application and build it by pressing `F9` key or clicking button `Run`
-2. Or build via terminal started in project main directory:
+2. Or use Run configuration, which will run `.bat` script
+3. Or build via terminal started in project main directory:
     ```powershell
     & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" ".\windows\installer\windowsInstallScript.iss"
     ```

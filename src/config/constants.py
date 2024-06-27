@@ -1,3 +1,5 @@
+import os
+
 APP_NAME = 'TransactionDecorator'
 
 # Processing constants
@@ -34,16 +36,16 @@ OUTPUT_DATE_FORMAT = "%d.%m.%Y %H:%M"
 BACKUP_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
 
 # Internal constants paths ----------------------------------------
-APP_ICON = 'icons/logo.png'
+APP_ICON = os.path.join('icons', 'logo.png')
 
-MAXIMIZE_ICON_PATH = 'icons/maximize.png'
-RESTORE_ICON_PATH = 'icons/restore.png'
-MINIMIZE_ICON_PATH = 'icons/minimize.png'
-CLOSE_ICON_PATH = 'icons/close.png'
+MAXIMIZE_ICON_PATH = os.path.join('icons', 'maximize.png')
+RESTORE_ICON_PATH = os.path.join('icons', 'restore.png')
+MINIMIZE_ICON_PATH = os.path.join('icons', 'minimize.png')
+CLOSE_ICON_PATH = os.path.join('icons', 'close.png')
 
-ICON_CSV_PATH = 'icons/csv-file.png'
-ICON_BACKUP_PATH = 'icons/file-backup.png'
-ICON_DICTIONARY_PATH = 'icons/dictionary.png'
+ICON_CSV_PATH = os.path.join('icons', 'csv-file.png')
+ICON_BACKUP_PATH = os.path.join('icons', 'file-backup.png')
+ICON_DICTIONARY_PATH = os.path.join('icons', 'dictionary.png')
 
 # External / User constants paths
 DICTIONARY_DIRECTORY_PATH = 'dictionary'

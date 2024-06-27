@@ -80,7 +80,7 @@ class FramelessMainWindow(QMainWindow):
     def setup_english_decimal_separator_widget(self):
         english_decimal_separator_widget = QWidget()
         (self.english_decimal_separator_layout,
-         self.english_decimal_separator_checkbox) = create_english_decimal_separator(english_decimal_separator_widget)
+         self.dot_decimal_separator_checkbox) = create_english_decimal_separator(english_decimal_separator_widget)
         english_decimal_separator_widget.setLayout(self.english_decimal_separator_layout)
         return english_decimal_separator_widget
 
@@ -119,12 +119,12 @@ class FramelessMainWindow(QMainWindow):
 
         update_existing_categories = self.force_update_categories_checkbox.isChecked()
         update_existing_labels = self.force_update_labels_checkbox.isChecked()
-        english_decimal_separator = self.english_decimal_separator_checkbox.isChecked()
+        dot_decimal_separator = self.dot_decimal_separator_checkbox.isChecked()
 
         is_success, message = decorate_transactions(first_row=first_row, last_row=last_row,
                                                     update_existing_categories=update_existing_categories,
                                                     update_existing_labels=update_existing_labels,
-                                                    dot_decimal_separator=english_decimal_separator
+                                                    dot_decimal_separator=dot_decimal_separator
                                                     )
         create_pop_up(is_success, message)
 

@@ -141,17 +141,17 @@ def create_dir_buttons(main_window):
 
     dictionary_button = create_directory_button(
         '%s' % cts.DICTIONARY_DIRECTORY_BUTTON_NAME,
-        f'{cts.DICTIONARY_DIRECTORY_PATH}/',
+        f'{cts.DICTIONARY_DIRECTORY_PATH}',
         QIcon(resource_path('%s' % cts.ICON_DICTIONARY_PATH))
     )
     backup_button = create_directory_button(
         '%s' % cts.OPEN_BACKUP_DIRECTORY_BUTTON_NAME,
-        f'{cts.FILE_BACKUP_DIRECTORY_PATH}/',
+        f'{cts.FILE_BACKUP_DIRECTORY_PATH}',
         QIcon(resource_path('%s' % cts.ICON_BACKUP_PATH))
     )
     csv_button = create_directory_button(
         '%s' % cts.CSV_DIRECTORY_BUTTON_NAME,
-        f'{cts.CSV_FILE_DIRECTORY_PATH}/',
+        f'{cts.CSV_FILE_DIRECTORY_PATH}',
         QIcon(resource_path('%s' % cts.ICON_CSV_PATH))
     )
 

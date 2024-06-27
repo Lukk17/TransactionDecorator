@@ -39,7 +39,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "..\..\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\..\csv\allTransactions.csv"; DestDir: "{userappdata}\{#MyAppName}\csv"; Flags: ignoreversion
+; Source: "..\..\csv\allTransactions.csv"; DestDir: "{userappdata}\{#MyAppName}\csv"; Flags: ignoreversion
 Source: "..\..\dictionary\*"; DestDir: "{userappdata}\{#MyAppName}\dictionary"; Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\..\icons\*"; DestDir: "{app}\icons"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
@@ -51,3 +51,28 @@ Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: de
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
+[Code]
+procedure CreateCSVFile;
+var
+  CSVFileName: String;
+  Headers: String;
+begin
+  // Specify the path where the CSV file should be created
+  CSVFileName := ExpandConstant('{userappdata}\{#MyAppName}\csv\allTransactions.csv');
+  // Ensure the directory exists before creating the file
+  ForceDirectories(ExtractFileDir(CSVFileName));
+
+  // Define the headers for the CSV file
+  Headers := 'Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author';
+
+  // Create and write the headers to the file
+  if not SaveStringToFile(CSVFileName, Headers, False) then
+    MsgBox('Failed to create and write to CSV file.', mbError, MB_OK);
+end;
+
+function InitializeSetup: Boolean;
+begin
+  // Create the CSV file during installation
+  CreateCSVFile;
+  Result := True;
+end;

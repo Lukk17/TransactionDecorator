@@ -19,19 +19,19 @@ def read_csv_for_test(path):
 
 
 @pytest.mark.parametrize("input_csv,expected_csv,delimiter,dot_decimal_separator", [
-    # ('./import/importerTestData.csv', './import/expected/expected-importerTestData.csv', ";", True),
-    # ('./import/importerTestData.csv', './import/expected/expected-testData-processing-comma-decimal-separator.csv',
-    #  ";", False),
-    # ('./import/testData-comma-with-artefacts-importing.csv',
-    #  './import/expected/expected-testData-comma-with-artefacts-importing.csv', ',', True),
+    ('./import/importerTestData.csv', './import/expected/correctly-importerTestData.csv', ";", True),
+    ('./import/importerTestData.csv', './import/expected/correctly-testData-processing-comma-decimal-separator.csv',
+     ";", False),
+    ('./import/testData-comma-with-artefacts-importing.csv',
+     './import/expected/correctly-testData-comma-with-artefacts-importing.csv', ',', True),
     ('./import/testData-semicolon-with-artefacts-importing.csv',
-     './import/expected/expected-testData-semicolon-with-artefacts-importing.csv', ';', True)
+     './import/expected/correctly-testData-semicolon-with-artefacts-importing.csv', ';', True)
 ])
 def test_process_imported_csv(input_csv, expected_csv, delimiter, dot_decimal_separator):
     base_path = os.path.dirname(__file__)
     test_input_path = os.path.abspath(os.path.join(base_path, input_csv))
     expected_output_path = os.path.abspath(os.path.join(base_path, expected_csv))
-    test_output_path = os.path.abspath(os.path.join(base_path, './import/test.csv'))
+    test_output_path = os.path.abspath(os.path.join(base_path, './import/allTransactions.csv'))
 
     # remove old test data if exists for clear run
     remove_test_file(test_output_path)
@@ -42,8 +42,8 @@ def test_process_imported_csv(input_csv, expected_csv, delimiter, dot_decimal_se
     # Mock `user_directory_path` to return the path for test output instead of the normal output
     with patch('processor.transactions_importer.user_directory_path') as mock_user_directory_path:
         def side_effect(arg):
-            if arg.endswith(cts.TRANSACTION_CSV_NAME):
-                return test_output_path
+            if arg.endswith(cts.CSV_FILE_DIRECTORY_PATH):
+                return os.path.join(base_path, './import/')
             elif arg.endswith(cts.IGNORE_DICTIONARY_NAME):
                 return ignore_dictionary
             elif arg.endswith(cts.IMPORT_DICTIONARY_NAME):

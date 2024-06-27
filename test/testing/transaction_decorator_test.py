@@ -21,7 +21,7 @@ def read_csv_for_test(path):
 
 @pytest.mark.parametrize(
     "expected_csv, first_row, last_row, update_existing_categories, update_existing_labels,dot_decimal_separator", [
-        ('./decorator/expected/correctly-noforce-english-decimal-processed.csv', 1, None, False, False, True),
+        ('./decorator/expected/correctly-noforce-dot-decimal-processed.csv', 1, None, False, False, True),
         ('./decorator/expected/correctly-force-categories-processed.csv', 1, None, True, False, True),
         ('./decorator/expected/correctly-force-labels-processed.csv', 1, None, False, True, True),
         ('./decorator/expected/correctly-force-all-processed.csv', 1, None, True, True, True),

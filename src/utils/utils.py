@@ -63,10 +63,6 @@ def user_directory_path(relative_path):
             # For Windows, construct the path within the AppData directory
             directory_path = os.path.join(os.environ['APPDATA'], cts.APP_NAME, relative_path)
 
-            # Ensure the directory exists
-            if not os.path.exists(directory_path):
-                os.makedirs(directory_path)
-
             print("[user_directory_path] win32 path: ", directory_path)
             return directory_path
 
@@ -180,6 +176,7 @@ def normalize_number_format(s, dot_decimal_separator=True):
 
 
 def create_original_csv(file_path):
+    print("create_original_csv file_path: " + file_path)
     headers = cts.CSV_HEADERS
     with open(file_path, 'w', encoding=cts.DEFAULT_ENCODING) as f:
         f.write(headers)

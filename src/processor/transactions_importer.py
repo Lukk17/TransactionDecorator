@@ -31,15 +31,18 @@ def process_imported_csv(imported_csv_file_name, delimiter, dot_decimal_separato
     print("Starting importing...")
     try:
 
-        ignore_dict_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.IGNORE_DICTIONARY_NAME}')
+        ignore_dict_path = user_directory_path(
+            os.path.join(f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.IGNORE_DICTIONARY_NAME}'))
+
         print("Ignore dictionary: {}".format(ignore_dict_path))
         with open(ignore_dict_path, 'r', encoding=cts.DEFAULT_ENCODING) as file:
             ignore_dict = json.load(file)
             ignore_rules = ignore_dict[cts.IGNORE_IGNORE_RULES_PARAM_NAME]
 
-        import_dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.IMPORT_DICTIONARY_NAME}')
-        original_csv_path = user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}/{cts.TRANSACTION_CSV_NAME}')
-
+        import_dictionary_path = user_directory_path(
+            os.path.join(f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.IMPORT_DICTIONARY_NAME}'))
+        original_csv_path = os.path.join(user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}'),
+                                         cts.TRANSACTION_CSV_NAME)
         print("Determining files encodings...")
         import_dictionary_encoding = detect_encoding(import_dictionary_path)
         import_encoding = detect_encoding(imported_csv_file_name)
@@ -83,11 +86,11 @@ def process_imported_csv(imported_csv_file_name, delimiter, dot_decimal_separato
 
             print("Imported csv columns: ", imported_csv.columns)
 
-            if not os.path.exists(original_csv_path):
-                print(f"No original CSV found at {original_csv_path}. Creating a new file.")
+            if not os.path.exists(original_csv_path) or os.path.getsize(original_csv_path) == 0:
+                print(f"Initializing CSV at {original_csv_path} either because it does not exist or is empty.")
                 create_original_csv(original_csv_path)
 
-            original_csv = pd.read_csv(original_csv_path, delimiter=';', encoding=original_encoding)
+            original_csv = pd.read_csv(str(original_csv_path), delimiter=';', encoding=original_encoding)
 
             print("Finding corresponding columns using mappings...")
             column_indices = create_column_position_map(column_mapping, imported_csv)
@@ -102,7 +105,7 @@ def process_imported_csv(imported_csv_file_name, delimiter, dot_decimal_separato
                 original_csv = append_new_row_to_original_csv(new_row, original_csv)
 
             print("Recreating original CSV with new rows...")
-            original_csv.to_csv(original_csv_path, index=False, sep=';')
+            original_csv.to_csv(str(original_csv_path), index=False, sep=';')
 
             print("Importing finished.")
             return True, ("%s" % cts.IMPORTING_COMPLETED_SUCCESSFULLY_MESSAGE)
