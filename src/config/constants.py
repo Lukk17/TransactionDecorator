@@ -1,9 +1,11 @@
+import os
+
 APP_NAME = 'TransactionDecorator'
 
 # Processing constants
 CSV_DELIMITER = ';'
 LABELS_DELIMITER = ','
-DEFAULT_ENCODING = 'UTF-8'
+DEFAULT_ENCODING = 'utf-8'
 NOTE_COLUMN = 'Note'
 LABELS_COLUMN = 'Labels'
 DATE_COLUMN = 'Date'
@@ -23,6 +25,8 @@ ERROR_PARSING_CSV = "Error parsing CSV file in line:"
 ERROR_IMPORTING_CSV = ("There was error during parsing - try different delimiter when importing. "
                        "\nError importing CSV file in line:")
 
+CSV_HEADERS = "Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author"
+
 INPUT_DATE_FORMATS = [
     "%d.%m.%Y", "%d.%m.%Y %H:%M:%S", "%d.%m.%Y %H:%M", "%Y-%m-%dT%H:%M:%S+00:00",
     "%Y-%m-%d", "%d-%m-%Y", "%Y-%m-%dT%H:%M:%S", "%Y-%m-%dT%H:%M:%S.%fZ"
@@ -32,16 +36,16 @@ OUTPUT_DATE_FORMAT = "%d.%m.%Y %H:%M"
 BACKUP_TIMESTAMP_FORMAT = "%Y%m%d%H%M%S"
 
 # Internal constants paths ----------------------------------------
-APP_ICON = 'icons/logo.png'
+APP_ICON = os.path.join('icons', 'logo.png')
 
-MAXIMIZE_ICON_PATH = 'icons/maximize.png'
-RESTORE_ICON_PATH = 'icons/restore.png'
-MINIMIZE_ICON_PATH = 'icons/minimize.png'
-CLOSE_ICON_PATH = 'icons/close.png'
+MAXIMIZE_ICON_PATH = os.path.join('icons', 'maximize.png')
+RESTORE_ICON_PATH = os.path.join('icons', 'restore.png')
+MINIMIZE_ICON_PATH = os.path.join('icons', 'minimize.png')
+CLOSE_ICON_PATH = os.path.join('icons', 'close.png')
 
-ICON_CSV_PATH = 'icons/csv-file.png'
-ICON_BACKUP_PATH = 'icons/file-backup.png'
-ICON_DICTIONARY_PATH = 'icons/dictionary.png'
+ICON_CSV_PATH = os.path.join('icons', 'csv-file.png')
+ICON_BACKUP_PATH = os.path.join('icons', 'file-backup.png')
+ICON_DICTIONARY_PATH = os.path.join('icons', 'dictionary.png')
 
 # External / User constants paths
 DICTIONARY_DIRECTORY_PATH = 'dictionary'
@@ -51,7 +55,15 @@ CSV_FILE_DIRECTORY_PATH = 'csv'
 CATEGORIES_DICTIONARY_NAME = 'categories-dictionary.json'
 LABELS_DICTIONARY_NAME = 'labels-dictionary.json'
 IMPORT_DICTIONARY_NAME = 'import-dictionary.json'
+IGNORE_DICTIONARY_NAME = 'ignore-dictionary.json'
 TRANSACTION_CSV_NAME = 'allTransactions.csv'
+
+IMPORT_COLUMN_MAPPING_PARAM_NAME = 'column_mapping'
+
+IGNORE_IGNORE_RULES_PARAM_NAME = 'ignore_rules'
+IGNORE_CONDITION_PARAM_NAME = 'conditions'
+IGNORE_COLUMN_PARAM_NAME = 'column'
+IGNORE_VALUE_PARAM_NAME = 'value'
 
 # UI setup ----------------------------------------------------------
 MAIN_WINDOW_TITLE = "CSV Processing"

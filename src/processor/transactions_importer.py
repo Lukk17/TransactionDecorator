@@ -1,4 +1,5 @@
 import json
+import os
 import traceback
 from datetime import datetime
 
@@ -8,7 +9,7 @@ import pandas as pd
 from PySide6.QtWidgets import (QFileDialog)
 
 import config.constants as cts
-from utils.utils import user_directory_path, normalize_number_format
+from utils.utils import user_directory_path, normalize_number_format, create_original_csv
 
 
 def import_csv(main_window):
@@ -19,25 +20,29 @@ def import_csv(main_window):
     file_name, _ = QFileDialog.getOpenFileName(main_window, "%s" % cts.OPEN_CSV_DIALOG_WINDOW_NAME, "",
                                                "%s" % cts.OPEN_CSV_DIALOG_DEFAULT_FILE_FORMAT)
     if file_name:
-        delimiter, english_decimal_separator, ok = create_input_dialog(main_window)
+        delimiter, dot_decimal_separator, ok = create_input_dialog(main_window)
 
         if ok and delimiter:
-            is_success, message = process_imported_csv(file_name, delimiter, english_decimal_separator)
+            is_success, message = process_imported_csv(file_name, delimiter, dot_decimal_separator)
             create_pop_up(is_success, message)
 
 
-def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_separator=True):
+def process_imported_csv(imported_csv_file_name, delimiter, dot_decimal_separator=True):
     print("Starting importing...")
     try:
-        # for printing full csv:
-        # pd.set_option('display.max_rows', None)
-        # pd.set_option('display.max_columns', None)
-        # pd.set_option('display.width', None)
-        # pd.set_option('display.max_colwidth', None)
 
-        import_dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.IMPORT_DICTIONARY_NAME}')
-        original_csv_path = user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}/{cts.TRANSACTION_CSV_NAME}')
+        ignore_dict_path = user_directory_path(
+            os.path.join(f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.IGNORE_DICTIONARY_NAME}'))
 
+        print("Ignore dictionary: {}".format(ignore_dict_path))
+        with open(ignore_dict_path, 'r', encoding=cts.DEFAULT_ENCODING) as file:
+            ignore_dict = json.load(file)
+            ignore_rules = ignore_dict[cts.IGNORE_IGNORE_RULES_PARAM_NAME]
+
+        import_dictionary_path = user_directory_path(
+            os.path.join(f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.IMPORT_DICTIONARY_NAME}'))
+        original_csv_path = os.path.join(user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}'),
+                                         cts.TRANSACTION_CSV_NAME)
         print("Determining files encodings...")
         import_dictionary_encoding = detect_encoding(import_dictionary_path)
         import_encoding = detect_encoding(imported_csv_file_name)
@@ -50,7 +55,7 @@ def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_sepa
         print("Loading import dictionary for columns names mapping...")
         with open(import_dictionary_path, 'r', encoding=import_dictionary_encoding) as file:
             import_dictionary = json.load(file)
-            column_mapping = import_dictionary['column_mapping']
+            column_mapping = import_dictionary[cts.IMPORT_COLUMN_MAPPING_PARAM_NAME]
 
             print("Loading imported and original CSVs...")
             rows_to_skip = find_start_row(imported_csv_file_name, import_dictionary_path)
@@ -62,9 +67,30 @@ def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_sepa
                                        quotechar='"',
                                        skiprows=rows_to_skip, index_col=False)
 
+            for rule in ignore_rules:
+                condition = True
+                for cond in rule[cts.IGNORE_CONDITION_PARAM_NAME]:
+                    column_name = cond[cts.IGNORE_COLUMN_PARAM_NAME]
+                    if column_name in imported_csv.columns:
+                        # Update condition only for matching rows
+                        condition &= (imported_csv[cond[cts.IGNORE_COLUMN_PARAM_NAME]] == cond[
+                            cts.IGNORE_VALUE_PARAM_NAME])
+                    else:
+                        print(f"Warning: Column '{column_name}' not found in the imported CSV.")
+                        condition = pd.Series(False, index=imported_csv.index)
+                        break  # No need to check further conditions if one fails
+
+                # Check if any 'True' are left in condition
+                if condition.any():
+                    imported_csv = imported_csv[~condition]
+
             print("Imported csv columns: ", imported_csv.columns)
 
-            original_csv = pd.read_csv(original_csv_path, delimiter=';', encoding=original_encoding)
+            if not os.path.exists(original_csv_path) or os.path.getsize(original_csv_path) == 0:
+                print(f"Initializing CSV at {original_csv_path} either because it does not exist or is empty.")
+                create_original_csv(original_csv_path)
+
+            original_csv = pd.read_csv(str(original_csv_path), delimiter=';', encoding=original_encoding)
 
             print("Finding corresponding columns using mappings...")
             column_indices = create_column_position_map(column_mapping, imported_csv)
@@ -73,17 +99,23 @@ def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_sepa
             print("Creating new rows with imported cell values...")
             for _, imported_row in imported_csv.iterrows():
                 new_row = assign_imported_values_to_new_row(column_indices, column_mapping,
-                                                            imported_row, original_csv, english_decimal_separator
+                                                            imported_row, original_csv, dot_decimal_separator
                                                             )
 
                 original_csv = append_new_row_to_original_csv(new_row, original_csv)
 
             print("Recreating original CSV with new rows...")
-            original_csv.to_csv(original_csv_path, index=False, sep=';')
+            original_csv.to_csv(str(original_csv_path), index=False, sep=';')
 
             print("Importing finished.")
             return True, ("%s" % cts.IMPORTING_COMPLETED_SUCCESSFULLY_MESSAGE)
 
+    except FileNotFoundError as e:
+        print(f"File not found: {e}")
+        return False, "File not found."
+    except json.JSONDecodeError as e:
+        print(f"JSON Decode Error: {e}")
+        return False, "Invalid JSON format."
     except Exception as e:
         print(f"{cts.ERROR_IMPORTING_CSV} {e}")
         traceback.print_exc()
@@ -91,8 +123,17 @@ def process_imported_csv(imported_csv_file_name, delimiter, english_decimal_sepa
 
 
 def detect_encoding(file_name):
+    if not os.path.exists(file_name):
+        print(f"File not found: {file_name}. Using default encoding '{cts.DEFAULT_ENCODING}'.")
+        return cts.DEFAULT_ENCODING
+
     with open(file_name, 'rb') as file:
-        return chardet.detect(file.read())['encoding']
+        detected_encoding = chardet.detect(file.read())['encoding']
+
+        if detected_encoding is None:
+            print(f"Failed to detect encoding reliably. Using '{cts.DEFAULT_ENCODING}' for file: {file_name}.")
+            return cts.DEFAULT_ENCODING
+        return detected_encoding
 
 
 def find_start_row(file_name, import_dictionary_path, delimiter=';'):
@@ -138,7 +179,7 @@ def append_new_row_to_original_csv(new_row, original_csv):
 
 
 def assign_imported_values_to_new_row(column_indices, column_mapping,
-                                      imported_row, original_csv, english_decimal_separator):
+                                      imported_row, original_csv, dot_decimal_separator):
     date_columns = column_mapping.get("Date", [])
     amount_columns = column_mapping.get("Amount", [])
 
@@ -151,7 +192,7 @@ def assign_imported_values_to_new_row(column_indices, column_mapping,
             if orig_col in date_columns:
                 new_row[orig_col] = parse_date(value)
             elif orig_col in amount_columns:
-                new_row[orig_col] = normalize_number_format(value, english_decimal_separator)
+                new_row[orig_col] = normalize_number_format(str(value), dot_decimal_separator)
             else:
                 new_row[orig_col] = value
 

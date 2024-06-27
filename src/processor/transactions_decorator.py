@@ -7,7 +7,7 @@ from datetime import datetime
 import pandas as pd
 
 import config.constants as cts
-from utils.utils import user_directory_path, normalize_number_format
+from utils.utils import user_directory_path, normalize_number_format, create_original_csv
 
 
 def normalize_string(s):
@@ -28,6 +28,11 @@ def create_backup(original_file_path, backup_dir):
         os.makedirs(backup_dir)
     timestamp = datetime.now().strftime(cts.BACKUP_TIMESTAMP_FORMAT)
     backup_file_path = os.path.join(backup_dir, f"{os.path.basename(original_file_path)}_{timestamp}.csv")
+
+    if not os.path.exists(original_file_path) or os.path.getsize(original_file_path) == 0:
+        print(f"Original file does not exist or is empty. Initializing file at {original_file_path}.")
+        create_original_csv(original_file_path)
+
     shutil.copy(original_file_path, backup_file_path)
 
 
@@ -103,8 +108,20 @@ def find_existing_category(df, row):
     return str(df.loc[row, cts.CATEGORIES_COLUMN]).strip().lower() if cts.CATEGORIES_COLUMN in df.columns else None
 
 
+def initialize_labels_column(df):
+    if cts.LABELS_COLUMN not in df.columns:
+        # If the Labels column does not exist, create it initialized with NaN
+        df[cts.LABELS_COLUMN] = pd.Series(dtype='object')
+    else:
+        # Ensure the column is treated as dtype 'object' to handle both strings and NaNs
+        if df[cts.LABELS_COLUMN].dtype != 'object':
+            df[cts.LABELS_COLUMN] = df[cts.LABELS_COLUMN].astype('object')
+
+
 def update_labels(df, dictionary, first_row, last_row, update_existing_labels=False):
     print("Processing labels if the '%s' column is not NaN" % cts.LABELS_COLUMN)
+    initialize_labels_column(df)
+
     for i in range(first_row - 1, min(last_row, len(df))):
         note = normalize_string(df.loc[i, ('%s' % cts.NOTE_COLUMN)])
         existing_labels = set()
@@ -120,7 +137,8 @@ def update_labels(df, dictionary, first_row, last_row, update_existing_labels=Fa
                                                 first_update)
 
         # Joining the labels with a CSV_DELIMITER to save back to CSV
-        df.loc[i, cts.LABELS_COLUMN] = cts.LABELS_DELIMITER.join(labels)
+        joined_labels = str(cts.LABELS_DELIMITER.join(labels))
+        df.loc[i, cts.LABELS_COLUMN] = joined_labels if joined_labels else ''
 
     print("Updating labels finished.")
 
@@ -183,7 +201,7 @@ def sort_dataframe_by_date(df):
     return df
 
 
-def convert_decimal_separator(df, column_name, english_decimal_separator=True):
+def convert_decimal_separator(df, column_name, dot_decimal_separator=True):
     """
     Converts the decimal separator in the specified column of a DataFrame using updated logic
     to handle mixed formats correctly.
@@ -195,28 +213,30 @@ def convert_decimal_separator(df, column_name, english_decimal_separator=True):
     """
     if column_name in df.columns:
         df[column_name] = df[column_name].apply(
-            lambda x: normalize_number_format(x, english_decimal_separator) if isinstance(x, str) else x)
+            lambda x: normalize_number_format(x, dot_decimal_separator) if isinstance(x, str) else x)
     else:
         print(f"Warning: Column '{column_name}' not found in DataFrame.")
 
 
 # by default, last_row is set to '0' to process the whole file
-def process_transactions(first_row=1, last_row=None,
-                         update_existing_categories=False, update_existing_labels=False,
-                         english_decimal_separator=True
-                         ):
+def decorate_transactions(first_row=1, last_row=None,
+                          update_existing_categories=False, update_existing_labels=False,
+                          dot_decimal_separator=True
+                          ):
     print("Starting processing...")
     try:
         # If first_row is less than 1, set it to 1
         first_row = max(int(first_row), 1)
 
         # Define paths relative to the script file
-        categories_dictionary_path = user_directory_path(
-            f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.CATEGORIES_DICTIONARY_NAME}')
-        labels_dictionary_path = user_directory_path(f'{cts.DICTIONARY_DIRECTORY_PATH}/{cts.LABELS_DICTIONARY_NAME}')
+        categories_dictionary_path = user_directory_path(os.path.join(
+            f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.CATEGORIES_DICTIONARY_NAME}'))
 
-        csv_path = user_directory_path(f'{cts.CSV_FILE_DIRECTORY_PATH}/{cts.TRANSACTION_CSV_NAME}')
-        backup_dir = user_directory_path(f'{cts.FILE_BACKUP_DIRECTORY_PATH}/')
+        labels_dictionary_path = user_directory_path(
+            os.path.join(f'{cts.DICTIONARY_DIRECTORY_PATH}', f'{cts.LABELS_DICTIONARY_NAME}'))
+
+        csv_path = user_directory_path(os.path.join(f'{cts.CSV_FILE_DIRECTORY_PATH}', f'{cts.TRANSACTION_CSV_NAME}'))
+        backup_dir = user_directory_path(f'{cts.FILE_BACKUP_DIRECTORY_PATH}')
 
         create_backup(csv_path, backup_dir)
         categories_dictionary = load_dictionary(categories_dictionary_path)
@@ -233,7 +253,7 @@ def process_transactions(first_row=1, last_row=None,
             update_labels(df, labels_dictionary, first_row, last_row, update_existing_labels)
 
             df = sort_dataframe_by_date(df)
-            convert_decimal_separator(df, cts.AMOUNT_COLUMN, english_decimal_separator)
+            convert_decimal_separator(df, cts.AMOUNT_COLUMN, dot_decimal_separator)
 
             df.to_csv(csv_path, sep=('%s' % cts.CSV_DELIMITER), index=False)
 
@@ -252,4 +272,4 @@ def process_transactions(first_row=1, last_row=None,
 
 
 if __name__ == "__main__":
-    process_transactions()
+    decorate_transactions()

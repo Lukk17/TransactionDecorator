@@ -1,8 +1,8 @@
-Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author;
-12.10.2023 20:44;Alior-manual;;;-99,0;PLN;pizza;;Lukk
-10.10.2023 20:44;Alior-manual;;;-46,03;PLN;Wolt Warszawa PL ;;Lukk
-12.10.2023 20:44;MyWallet;;;-99,0;PLN;booking.com;;Lukk
-11.10.2023 20:44;MyWallet;;;1000,0;PLN;reserved;taxi;Lukk
+Date;Wallet;Type;Category name;Amount;Currency;Note;Labels;Author
+12.10.2023 20:44;Alior-manual;;;-99.0;PLN;pizza;;Lukk
+10.10.2023 20:44;Alior-manual;;;-46.03;PLN;Wolt Warszawa PL ;;Lukk
+12.10.2023 20:44;MyWallet;;;-99.0;PLN;booking.com;;Lukk
+11.10.2023 20:44;MyWallet;;;1000.0;PLN;reserved;taxi;Lukk
 13.10.2023 10:00;MyWallet;;;40000000000;PLN;       , PL933333285222229703,  5/83 02-112 WARSZAWA;;Lukk
 13.10.2023 12:10;MyWallet;;;75;;Transakcja kartą debetową, UBER *TRIP, UBER *TRIP;;
 13.10.2023 21:15;MyWallet;;;500000;;ALLEGRO PAY SP. Z O.O. UL. aaaa 1B 61-569 POZNAŃ PL, aliexpress Zwrot Allegro Pay 11123344  ALLEGRO PAY SP. Z O.O.             UL. aaaa 1B                61-569 POZNAŃ PL;;

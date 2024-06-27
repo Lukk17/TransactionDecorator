@@ -28,8 +28,12 @@ def resource_path(relative_path):
         # Specific adjustment for Linux deployment via .deb package
 
     elif sys.platform == "linux":
+        script_path = os.path.dirname(__file__)
         if is_snap():
             base_path = get_snap_base_path()
+        elif os.path.exists(os.path.join(os.path.abspath(script_path), '../../.idea')):
+            base_path = os.path.join(os.path.abspath(script_path), '../../')
+            print("[resource_path] IDE linux dev base path: ", base_path)
         else:
             print("[resource_path] running in linux")
             base_path = '/usr/lib/transaction-decorator'
@@ -53,6 +57,7 @@ def resource_path(relative_path):
 
 # Paths for external app files, specific to user like backup, csv, dictionary
 def user_directory_path(relative_path):
+    base_path = os.path.dirname(__file__)
     # If the application is run as a bundled executable (e.g., using PyInstaller)
     if getattr(sys, 'frozen', False):
         # snap can set frozen attribute
@@ -62,10 +67,6 @@ def user_directory_path(relative_path):
         elif sys.platform == "win32":
             # For Windows, construct the path within the AppData directory
             directory_path = os.path.join(os.environ['APPDATA'], cts.APP_NAME, relative_path)
-
-            # Ensure the directory exists
-            if not os.path.exists(directory_path):
-                os.makedirs(directory_path)
 
             print("[user_directory_path] win32 path: ", directory_path)
             return directory_path
@@ -86,11 +87,11 @@ def user_directory_path(relative_path):
         if is_snap():
             return get_snap_user_directory_path(relative_path)
 
-        elif os.path.exists('../.idea'):
-            directory_path = resource_path(relative_path)
-
+        elif os.path.exists(os.path.join(os.path.abspath(base_path), '../../.idea')):
+            directory_path = os.path.join(os.path.abspath(base_path), '../../')
+            # directory_path = resource_path(relative_path)
             print("[user_directory_path] IDE linux dev path: ", directory_path)
-            return directory_path
+            return os.path.join(directory_path, relative_path)
 
         # For Linux, place user-specific data in the home directory
         directory_path = os.path.join('/usr/share', 'transaction-decorator', relative_path)
@@ -137,7 +138,7 @@ def change_to_user_directory():
         print(f"Failed to change directory: {e}")
 
 
-def normalize_number_format(s, english_decimal_separator=True):
+def normalize_number_format(s, dot_decimal_separator=True):
     """
     Normalizes mixed number formats to a consistent format.
 
@@ -154,17 +155,16 @@ def normalize_number_format(s, english_decimal_separator=True):
 
     # Pattern to identify English format (e.g., 1,234.56)
     eng_format = re.compile(r'^-?\d{1,3}(?:,\d{3})*\.?\d*$')
-
     if standard_format.match(s):
-        if english_decimal_separator:
-            # Convert from standard to English format
+        if dot_decimal_separator:
+            # Convert from standard to dot format
             return s.replace('.', '').replace(',', '.')
         else:
             # Already in Euro format, remove dots if needed
             return s.replace('.', '')
 
     elif eng_format.match(s):
-        if english_decimal_separator:
+        if dot_decimal_separator:
             # Already in English format, remove commas if needed
             return s.replace(',', '')
         else:
@@ -172,9 +172,16 @@ def normalize_number_format(s, english_decimal_separator=True):
             return s.replace(',', '').replace('.', ',')
     else:
         print(f"Warning: weird format of number: '{s}' - trying to convert anyway..")
-        if english_decimal_separator:
+        if dot_decimal_separator:
             # Convert to English format
             return s.replace(',', '.')
         else:
             # Convert to standard format with comma as decimal separator
             return s.replace('.', ',')
+
+
+def create_original_csv(file_path):
+    print("create_original_csv file_path: " + file_path)
+    headers = cts.CSV_HEADERS
+    with open(file_path, 'w', encoding=cts.DEFAULT_ENCODING) as f:
+        f.write(headers)

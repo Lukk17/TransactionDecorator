@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='transaction-decorator',  # Adjust if needed
-    version='1.0.0',  # Update version as necessary
+    version='1.0.1',  # Update version as necessary
     description='A utility to decorate transactions.',
     author='Lukk Sarna',
     author_email='luksarna@gmail.com',
@@ -13,5 +13,6 @@ setup(
         'PySide6==6.6.0',
         'PySide6-Addons==6.6.0',
         'PySide6-Essentials==6.6.0',
+        'pytest==8.2.2',
     ]
 )

@@ -3,8 +3,8 @@ import config.constants as cts
 
 def get_app_style():
     return f"""
-            QMainWindow {{
-                padding: 0px;
+            QWidget {{ 
+                border-radius: 15px;
                 background-color: {cts.BACKGROUND_COLOR};
             }}
             QPushButton {{

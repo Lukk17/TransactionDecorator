@@ -3,17 +3,31 @@ from PySide6.QtWidgets import (QApplication, QMainWindow, QWidget)
 from config.style_config import get_app_style, get_process_button_style
 from gui_elements.title_bar import TitleBar
 from gui_elements.widget_assembler import *
-from processor.process_transactions import *
+from processor.transactions_decorator import *
 from utils.utils import resource_path, change_to_user_directory
 
 
 class FramelessMainWindow(QMainWindow):
+
+    def mousePressEvent(self, event):
+        if event.button() == Qt.LeftButton:
+            self.m_dragPosition = event.globalPosition().toPoint() - self.frameGeometry().topLeft()
+            event.accept()
+
+    def mouseMoveEvent(self, event):
+        if event.buttons() == Qt.LeftButton:
+            self.move(event.globalPosition().toPoint() - self.m_dragPosition)
+            event.accept()
+
     def __init__(self):
         super().__init__()
         self.m_dragPosition = None
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.Window)
         self.setWindowTitle("%s" % cts.MAIN_WINDOW_TITLE)
         self.setWindowIcon(QIcon(resource_path(cts.APP_ICON)))
+
+        # QMainWindow need to be transparent for central widget to get borders rounded
+        self.setAttribute(Qt.WA_TranslucentBackground)
 
         # Central Widget and Layouts
         self.central_widget = QWidget()
@@ -66,7 +80,7 @@ class FramelessMainWindow(QMainWindow):
     def setup_english_decimal_separator_widget(self):
         english_decimal_separator_widget = QWidget()
         (self.english_decimal_separator_layout,
-         self.english_decimal_separator_checkbox) = create_english_decimal_separator(english_decimal_separator_widget)
+         self.dot_decimal_separator_checkbox) = create_english_decimal_separator(english_decimal_separator_widget)
         english_decimal_separator_widget.setLayout(self.english_decimal_separator_layout)
         return english_decimal_separator_widget
 
@@ -89,7 +103,9 @@ class FramelessMainWindow(QMainWindow):
         return dir_buttons_widget
 
     def set_style(self):
-        self.setStyleSheet(get_app_style())
+        style = get_app_style()
+        self.setStyleSheet(style)
+        self.central_widget.setStyleSheet(style)
         self.process_button.setStyleSheet(get_process_button_style())
 
     def create_process_button(self):
@@ -103,13 +119,13 @@ class FramelessMainWindow(QMainWindow):
 
         update_existing_categories = self.force_update_categories_checkbox.isChecked()
         update_existing_labels = self.force_update_labels_checkbox.isChecked()
-        english_decimal_separator = self.english_decimal_separator_checkbox.isChecked()
+        dot_decimal_separator = self.dot_decimal_separator_checkbox.isChecked()
 
-        is_success, message = process_transactions(first_row=first_row, last_row=last_row,
-                                                   update_existing_categories=update_existing_categories,
-                                                   update_existing_labels=update_existing_labels,
-                                                   english_decimal_separator=english_decimal_separator
-                                                   )
+        is_success, message = decorate_transactions(first_row=first_row, last_row=last_row,
+                                                    update_existing_categories=update_existing_categories,
+                                                    update_existing_labels=update_existing_labels,
+                                                    dot_decimal_separator=dot_decimal_separator
+                                                    )
         create_pop_up(is_success, message)
 
         if is_success:
@@ -118,7 +134,6 @@ class FramelessMainWindow(QMainWindow):
     def open_csv_directory(self):
         # Programmatically trigger a click on the csv_button
         self.csv_button.click()
-
 
 
 if __name__ == "__main__":

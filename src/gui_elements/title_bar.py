@@ -12,17 +12,14 @@ class TitleBar(QFrame):
         self.layout = QHBoxLayout(self)
         self.layout.setContentsMargins(0, 0, 0, 0)  # No margins
         self.layout.setSpacing(0)  # No spacing between widgets
-        self.setStyleSheet("background-color: #2e2e2e;")  # Title bar background color
+        self.setStyleSheet(f"background-color: {cts.BACKGROUND_COLOR};")  # Title bar background color
 
-        self.maximize_icon = QIcon(resource_path('./icons/maximize.png'))
-        self.restore_icon = QIcon(resource_path('./icons/restore.png'))
-        self.minimize_icon = QIcon(resource_path('./icons/minimize.png'))
-        self.close_icon = QIcon(resource_path('./icons/close.png'))
+        self.minimize_icon = QIcon(resource_path(cts.MINIMIZE_ICON_PATH))
+        self.close_icon = QIcon(resource_path(cts.CLOSE_ICON_PATH))
 
         # Control Buttons
         button_size = 30  # The fixed size for the buttons
         self.minimalize_button = self.init_button(self.minimize_icon, parent.showMinimized, button_size)
-        self.maximize_button = self.init_maxi_resto_button(button_size, parent)
         self.close_button = self.init_button(self.close_icon, parent.close, button_size)
 
         # Spacer to push buttons to the right
@@ -30,7 +27,6 @@ class TitleBar(QFrame):
 
         # Add buttons to layout
         self.layout.addWidget(self.minimalize_button, alignment=Qt.AlignTop)
-        self.layout.addWidget(self.maximize_button, alignment=Qt.AlignTop)
         self.layout.addWidget(self.close_button, alignment=Qt.AlignTop)
 
         # Set the title bar and its layout margins to zero
@@ -59,18 +55,6 @@ class TitleBar(QFrame):
         """
         button.setStyleSheet(button_style)
         button.setIcon(icon)
-
-        return button
-
-    def init_maxi_resto_button(self, button_size, parent):
-        button = self.init_button(self.maximize_icon, None, button_size)
-
-        if parent.isMaximized():
-            button.setIcon(self.restore_icon)
-        else:
-            button.setIcon(self.maximize_icon)
-
-        button.clicked.connect(lambda: self.toggle_maximize_restore(button, self.maximize_icon, self.restore_icon))
 
         return button
 
