@@ -58,18 +58,19 @@ You can find ones for:
 
 ### Installing required packages into PyInstaller:
 
-Create python virtual env by going `File` > `Project structure..` > `SDK` > `+ Add SDK` > `Python SDK..` :  
-`Virtualenv Environment` > `New environment` (do not inherit packages)
+Create venv in the project root directory: 
+```powershell
+C:\Python311\python.exe -m venv venv
+```
 
-If you use global env all packages will be copied into installer - and this can be large > 10 GB
-
-##### try to temporary, only for installing it delete:
+Activate venv:
+Windows:
+```powershell
+.\venv\Scripts\activate.ps1
 ```
-C:\Python311\Lib\site-packages\custom_packages_location.pth
-```
-and
-```
-C:\ProgramData\pip\pip.ini
+Linux:
+```shell
+  .\venv\Scripts\activate
 ```
 
 Terminal path should be in same directory as `setup.py` file (project root directory)
