@@ -3,6 +3,7 @@ from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import QDialog, QVBoxLayout, QLabel, QPushButton
 
 import config.constants as cts
+from utils.utils import resource_path
 
 
 def get_main_stylesheet():
@@ -40,7 +41,7 @@ class ConfirmationDialog(QDialog):
         super().__init__(parent)
         self.m_dragPosition = None
         self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
-        self.setWindowIcon(QIcon(cts.APP_ICON))
+        self.setWindowIcon(QIcon(resource_path(cts.APP_ICON)))
         self.setFixedSize(300, 200)
 
         if is_success:

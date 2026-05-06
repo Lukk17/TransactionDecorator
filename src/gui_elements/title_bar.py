@@ -58,11 +58,3 @@ class TitleBar(QFrame):
 
         return button
 
-    def toggle_maximize_restore(self, button, maximize_icon, restore_icon):
-        if self.isMaximized():
-            self.showNormal()
-            button.setIcon(maximize_icon)  # Change to maximize icon when a window is normal
-        else:
-            self.showMaximized()
-            button.setIcon(restore_icon)
-

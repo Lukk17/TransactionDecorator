@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant U as User
+    participant G as GUI (Import button)
+    participant W as widget_assembler
+    participant I as transactions_importer
+    participant FS as Filesystem
+
+    U->>G: Click "Import CSV"
+    G->>W: import_csv(main_window)
+    W->>U: QFileDialog (pick bank CSV)
+    U->>W: file path
+    W->>U: QDialog (delimiter + decimal format)
+    U->>W: choices
+    W->>I: process_imported_csv(path, delimiter, dot_decimal)
+    I->>FS: load ignore-dictionary.json
+    I->>FS: load import-dictionary.json
+    I->>FS: detect encodings (chardet)
+    I->>FS: read imported CSV (in-memory header fix if needed)
+    I->>I: apply ignore rules
+    I->>FS: read existing allTransactions.csv (or initialize)
+    I->>I: map columns + parse dates + normalize amounts
+    I->>FS: pd.concat new rows + write allTransactions.csv
+    I->>W: (is_success, message)
+    W->>U: ConfirmationDialog

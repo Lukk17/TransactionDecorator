@@ -20,16 +20,18 @@ C:\ProgramData\pip\pip.ini
 From the project root:
 
 ```shell
-pip install -e .
+pip install -e .[dev]
 ```
 
-To regenerate the requirements list:
+The `[dev]` extra pulls in pytest and pyinstaller alongside the runtime dependencies. All dependencies are pinned in `pyproject.toml` (`[project] dependencies` and `[project.optional-dependencies] dev`).
+
+To audit installed versions:
 
 ```shell
-pip freeze > requirements.txt
+pip list
 ```
 
-Then mirror them into `install_requires` inside `setup.py`.
+When bumping a pinned dependency, update `pyproject.toml` directly — there is no separate `requirements.txt` or `setup.py` to keep in sync.
 
 ## 2. Build the `.exe` and installer
 

@@ -1,0 +1,18 @@
+graph LR
+    User([User]) --> GUI[gui.py FramelessMainWindow]
+    GUI --> Title[gui_elements/title_bar]
+    GUI --> Widgets[gui_elements/widget_assembler]
+    GUI --> Worker[ProcessingWorker QThread]
+
+    Worker --> Decorator[processor/transactions_decorator]
+    Widgets --> Importer[processor/transactions_importer]
+
+    Decorator --> Utils[utils/utils]
+    Importer --> Utils
+    Utils --> Constants[config/constants]
+
+    Decorator --> FS[(allTransactions.csv)]
+    Decorator --> Backup[(backup/)]
+    Importer --> FS
+    Decorator --> Dict[(dictionary/*.json)]
+    Importer --> Dict

@@ -51,8 +51,8 @@ def test_process_imported_csv(expected_csv, first_row, last_row, update_existing
 
     shutil.copyfile(original_csv, tested_csv)
 
-    categories_dictionary = os.path.abspath(os.path.join(base_path, '../../dictionary/categories-dictionary.json'))
-    labels_dictionary = os.path.abspath(os.path.join(base_path, '../../dictionary/labels-dictionary.json'))
+    categories_dictionary = os.path.abspath(os.path.join(base_path, '../dictionary/categories-dictionary.json'))
+    labels_dictionary = os.path.abspath(os.path.join(base_path, '../dictionary/labels-dictionary.json'))
 
     # Mock `user_directory_path` to return the path for test output instead of the normal output
     with patch('processor.transactions_decorator.user_directory_path') as mock_user_directory_path:

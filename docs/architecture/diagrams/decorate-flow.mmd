@@ -1,0 +1,24 @@
+sequenceDiagram
+    participant U as User
+    participant G as GUI (Run Processing)
+    participant T as ProcessingWorker (QThread)
+    participant D as transactions_decorator
+    participant FS as Filesystem
+
+    U->>G: Click "Run Processing"
+    G->>G: validate first/last row inputs (QIntValidator)
+    G->>T: start QThread with worker
+    T->>D: decorate_transactions(...)
+    D->>FS: backup allTransactions.csv → backup/<timestamp>.csv
+    D->>FS: load categories-dictionary.json
+    D->>FS: load labels-dictionary.json
+    D->>FS: read allTransactions.csv
+    D->>D: replace_multiple_whitespaces
+    D->>D: update_categories (per row, dictionary lookup)
+    D->>D: update_labels (per row, accumulating)
+    D->>D: sort_dataframe_by_date (newest first)
+    D->>D: convert_decimal_separator
+    D->>FS: write allTransactions.csv
+    D->>T: (is_success, message)
+    T->>G: finished signal
+    G->>U: ConfirmationDialog + open csv directory on success

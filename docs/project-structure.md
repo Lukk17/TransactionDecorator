@@ -31,19 +31,27 @@ TransactionDecorator/
 │   │   ├── title_bar.py
 │   │   └── widget_assembler.py
 │   ├── processor/
-│   │   ├── process_import.py
-│   │   └── process_transactions.py
+│   │   ├── transactions_decorator.py      # Decorate / categorize / label pipeline
+│   │   └── transactions_importer.py       # Bank-CSV import + normalization
 │   ├── utils/
 │   │   └── utils.py
 │   └── gui.py                             # Application entry point
-├── test-csv/
-│   ├── import/                            # Sample CSVs for import tests
-│   └── processed-examples/                # Reference outputs
+├── tests/
+│   ├── conftest.py
+│   ├── import_test.py                     # Integration: import flow
+│   ├── transaction_decorator_test.py      # Integration: decorate flow
+│   ├── decorator/                         # Decorator fixtures + expected outputs
+│   ├── import/                            # Importer fixtures + expected outputs
+│   └── unit/                              # Pure-function unit tests
+├── docs/
+│   ├── architecture/                      # ADRs + Mermaid diagrams
+│   └── *.md
+├── openspec/                              # Spec-driven change proposals
 ├── windows/
 │   ├── entrypoint/                        # PyInstaller output
 │   └── installer/
 │       └── windowsInstallScript.iss       # Inno Setup script
-├── setup.py
+├── pyproject.toml                         # PEP 621 metadata + pinned deps
 ├── snapcraft.yaml
 └── TransactionDecorator.spec              # PyInstaller spec
 ```

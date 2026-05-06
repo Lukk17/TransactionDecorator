@@ -38,3 +38,7 @@ In the example above, a row is ignored when:
 
 - `Amount = 100` **AND** `Name = VAT` **AND** `Currency = PLN`
 - **OR** `Category = Food`
+
+## Force-update behavior
+
+When you check **"Force categories update"** before clicking **Run Processing**, every row in the selected range is re-categorized from the dictionary. Rows whose `Note` matches no keyword are reset to `Other` — even if they previously had a manually-set category. See [ADR-0005](architecture/decisions/adr-0005-force-update-other.md) for the rationale and how to scope a force-update to specific rows.

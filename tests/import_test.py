@@ -36,8 +36,8 @@ def test_process_imported_csv(input_csv, expected_csv, delimiter, dot_decimal_se
     # remove old test data if exists for clear run
     remove_test_file(test_output_path)
 
-    import_dictionary = os.path.abspath(os.path.join(base_path, '../../dictionary/import-dictionary.json'))
-    ignore_dictionary = os.path.abspath(os.path.join(base_path, '../../dictionary/ignore-dictionary.json'))
+    import_dictionary = os.path.abspath(os.path.join(base_path, '../dictionary/import-dictionary.json'))
+    ignore_dictionary = os.path.abspath(os.path.join(base_path, '../dictionary/ignore-dictionary.json'))
 
     # Mock `user_directory_path` to return the path for test output instead of the normal output
     with patch('processor.transactions_importer.user_directory_path') as mock_user_directory_path:

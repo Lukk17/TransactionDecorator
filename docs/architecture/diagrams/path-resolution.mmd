@@ -1,0 +1,12 @@
+flowchart TD
+    Start([resource_path / user_directory_path]) --> Snap{is_snap?}
+    Snap -- yes --> S[SNAP env<br/>$SNAP/usr/share/&lt;name&gt;<br/>$SNAP_USER_DATA]
+    Snap -- no --> Frozen{sys.frozen?}
+    Frozen -- yes --> Win{platform == win32?}
+    Win -- yes --> FW[FROZEN_WINDOWS<br/>dirname(sys.executable)<br/>%APPDATA%/TransactionDecorator]
+    Win -- no --> FO[FROZEN_OTHER<br/>repo-style fallback]
+    Frozen -- no --> IDE{repo_root/.idea exists?}
+    IDE -- yes --> ID[IDE<br/>repo_root]
+    IDE -- no --> Lin{platform == linux?}
+    Lin -- yes --> LP[LINUX_PACKAGE<br/>/usr/lib/transaction-decorator<br/>/usr/share/transaction-decorator]
+    Lin -- no --> UN[UNKNOWN<br/>repo-style fallback]

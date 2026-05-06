@@ -4,8 +4,10 @@
 
 !./linux/**
 
-./backup/
-./csv/
+# Auto-generated CSV snapshots — do not commit
+/backup/
+/csv/
+/tests/backup/
 
 .idea/
 TransactionDecorator.iml

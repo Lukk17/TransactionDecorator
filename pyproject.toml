@@ -1,0 +1,47 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "transaction-decorator"
+version = "1.0.1"
+description = "A desktop GUI for cleaning, categorizing, and labeling personal transaction CSVs."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "Łukasz Sarna", email = "luksarna@gmail.com" },
+]
+keywords = ["finance", "csv", "transactions", "categorization", "pyside6"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Topic :: Office/Business :: Financial",
+]
+dependencies = [
+    "chardet==7.4.3",
+    "pandas==2.3.3",
+    "PySide6==6.11.0",
+    "PySide6-Addons==6.11.0",
+    "PySide6-Essentials==6.11.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest==8.4.2",
+    "pyinstaller==6.20.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/Lukk17/TransactionDecorator"
+Issues = "https://github.com/Lukk17/TransactionDecorator/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

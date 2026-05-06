@@ -74,7 +74,9 @@ bank-export.csv ──▶ Import (normalize + ignore rules) ──▶ allTransac
 - [Building on Windows](docs/windows-build.md)
 - [Building on Linux (.deb / snap)](linux/linux.md)
 - [Development guide](docs/development.md)
+- [Testing strategy (automated + manual smoke)](docs/testing-strategy.md)
 - [Troubleshooting](docs/troubleshooting.md)
+- [Architecture (ADRs + diagrams)](docs/architecture/index.md)
 
 ## Tech stack
 
@@ -92,7 +94,7 @@ bank-export.csv ──▶ Import (normalize + ignore rules) ──▶ allTransac
 pytest
 ```
 
-See [docs/development.md](docs/development.md) for IDE run configurations.
+The full suite (unit + integration) is configured via `pyproject.toml`. See [docs/testing-strategy.md](docs/testing-strategy.md) for the manual smoke checklist that complements the automated suite, and [docs/development.md](docs/development.md) for IDE run configurations.
 
 ## License
 
