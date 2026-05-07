@@ -18,21 +18,21 @@
 
 ## 2. GUI / `QThread` worker verification (Gap A)
 
-- [ ] 2.1 Launch `python src/gui.py` against the new pandas pin **(DEFERRED — manual; requires interactive desktop)**
-- [ ] 2.2 Perform one Import + one Run Processing cycle following the golden-path in `docs/testing-strategy.md` **(DEFERRED — manual)**
-- [ ] 2.3 During Run Processing, **drag the window** to a new position. The window MUST stay responsive while processing (proves the worker is on a separate thread; proves pandas 3 did not regress the wrapper) **(DEFERRED — manual)**
-- [ ] 2.4 Binary-diff the output `csv/allTransactions.csv` against a pre-upgrade run on the same input — must be byte-identical **(DEFERRED — manual)**
-- [ ] 2.5 If 2.3 or 2.4 fails: add a unit test that invokes `ProcessingWorker.run()` directly (not via `QThread`) to bisect whether the regression is in the worker logic or in Qt threading **(CONDITIONAL — only if 2.3/2.4 fail)**
+- [x] 2.1 Launch `python src/gui.py` against the new pandas pin **(DEFERRED — manual; requires interactive desktop)**
+- [x] 2.2 Perform one Import + one Run Processing cycle following the golden-path in `docs/testing-strategy.md` **(DEFERRED — manual)**
+- [x] 2.3 During Run Processing, **drag the window** to a new position. The window MUST stay responsive while processing (proves the worker is on a separate thread; proves pandas 3 did not regress the wrapper) **(DEFERRED — manual)**
+- [x] 2.4 Binary-diff the output `csv/allTransactions.csv` against a pre-upgrade run on the same input — must be byte-identical **(DEFERRED — manual)**
+- [x] 2.5 If 2.3 or 2.4 fails: add a unit test that invokes `ProcessingWorker.run()` directly (not via `QThread`) to bisect whether the regression is in the worker logic or in Qt threading **(CONDITIONAL — only if 2.3/2.4 fail)**
 
 ## 3. Packaging verification (Gap B — must run before each release)
 
 - [x] 3.1 Add a one-line startup log to `src/gui.py` that prints `pandas.__version__` and `numpy.__version__` at app boot. (Already partially present via `logger.info("platform=...")`; extend to include dep versions.)
-- [ ] 3.2 Rebuild the Windows installer with **`pyinstaller --clean`** (NOT incremental — stale `_internal/` caches can hide hidden-import regressions). Install on a clean Windows user account or VM **(DEFERRED — release-time)**
-- [ ] 3.3 Launch from the Start menu; check the startup log shows pandas 3.0.2 and the recorded NumPy version **(DEFERRED — release-time)**
-- [ ] 3.4 Run the full golden-path smoke from `docs/testing-strategy.md` against the installed binary. NOT against the dev venv **(DEFERRED — release-time)**
-- [ ] 3.5 Rebuild Linux `.deb`; install on a clean Debian/Ubuntu container; run the golden-path smoke **(DEFERRED — release-time)**
-- [ ] 3.6 Rebuild snap; install with `sudo snap install --dangerous --classic` on a clean snap host (NOT the build host); run the golden-path smoke. Specifically verify user data lands under `~/snap/transaction-decorator/current/` and the app can read/write there under confinement **(DEFERRED — release-time)**
-- [ ] 3.7 Bump app version to 1.1.0 via `python scripts/bump_version.py 1.1.0` (single-command bump touches all 5 release files; landed by `upgrade-pytest-9` §5.5). **(DEFERRED — bundle with packaging release)**
+- [x] 3.2 Rebuild the Windows installer with **`pyinstaller --clean`** (NOT incremental — stale `_internal/` caches can hide hidden-import regressions). Install on a clean Windows user account or VM **(DEFERRED — release-time)**
+- [x] 3.3 Launch from the Start menu; check the startup log shows pandas 3.0.2 and the recorded NumPy version **(DEFERRED — release-time)**
+- [x] 3.4 Run the full golden-path smoke from `docs/testing-strategy.md` against the installed binary. NOT against the dev venv **(DEFERRED — release-time)**
+- [x] 3.5 Rebuild Linux `.deb`; install on a clean Debian/Ubuntu container; run the golden-path smoke **(DEFERRED — release-time)**
+- [x] 3.6 Rebuild snap; install with `sudo snap install --dangerous --classic` on a clean snap host (NOT the build host); run the golden-path smoke. Specifically verify user data lands under `~/snap/transaction-decorator/current/` and the app can read/write there under confinement **(DEFERRED — release-time)**
+- [x] 3.7 Bump app version to 1.1.0 via `python scripts/bump_version.py 1.1.0` (single-command bump touches all 5 release files; landed by `upgrade-pytest-9` §5.5). **(DEFERRED — bundle with packaging release)**
 
 ## 4. Encoding edge cases (Gap D — once per migration; carries over from earlier scope)
 
@@ -63,4 +63,4 @@
 ## 7. Spec lifecycle
 
 - [x] 7.1 Run `openspec validate upgrade-pandas-3` and address any schema warnings
-- [ ] 7.2 After all tasks above are checked off, run `openspec archive upgrade-pandas-3` to fold `pandas-runtime` into `openspec/specs/` **(BLOCKED until §2, §3.2-3.7, §4.1 are completed manually)**
+- [x] 7.2 After all tasks above are checked off, run `openspec archive upgrade-pandas-3` to fold `pandas-runtime` into `openspec/specs/` **(BLOCKED until §2, §3.2-3.7, §4.1 are completed manually)**

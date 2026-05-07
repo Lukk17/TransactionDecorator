@@ -29,7 +29,7 @@
 
 ## 4. Manual smoke cross-check
 
-- [ ] 4.1 After §2 passes, run the "Dependency-bump verification" checklist in `docs/testing-strategy.md` (which references back here for the audit; the smoke confirms the pinned suite still runs end-to-end)
+- [x] 4.1 After §2 passes, run the "Dependency-bump verification" checklist in `docs/testing-strategy.md` (which references back here for the audit; the smoke confirms the pinned suite still runs end-to-end)
 
 ## 5. Bundled test-coverage expansion (do NOT defer past this change)
 
@@ -81,4 +81,4 @@ These items were surfaced during the gap-fill audit that preceded this proposal.
 ## 6. Spec lifecycle
 
 - [x] 6.1 Run `openspec validate upgrade-pytest-9` — passes and address any schema warnings
-- [ ] 6.2 After all tasks above are checked off, run `openspec archive upgrade-pytest-9` to fold `test-runner` into `openspec/specs/`
+- [x] 6.2 After all tasks above are checked off, run `openspec archive upgrade-pytest-9` to fold `test-runner` into `openspec/specs/`
