@@ -176,8 +176,11 @@ if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = FramelessMainWindow()
     change_to_user_directory()
+    import pandas as _pd
+    import numpy as _np
     logger.info("sys.path=%s", sys.path)
     logger.info("PYTHONPATH=%s", os.environ.get('PYTHONPATH'))
     logger.info("platform=%s cwd=%s", sys.platform, os.getcwd())
+    logger.info("pandas=%s numpy=%s", _pd.__version__, _np.__version__)
     window.show()
     sys.exit(app.exec())

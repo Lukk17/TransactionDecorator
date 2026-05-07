@@ -48,3 +48,14 @@ For end-to-end manual checks the automated suite cannot reach (live GUI, package
 ## Architecture
 
 For ADRs and component/sequence diagrams, see [architecture/index.md](architecture/index.md).
+
+## Releasing
+
+Bump the version in lockstep across all release artifacts:
+
+```shell
+python scripts/bump_version.py 1.1.0           # write the change
+python scripts/bump_version.py --check 1.1.0   # dry-run preview
+```
+
+The script updates: `pyproject.toml`, `linux/createDebFile.sh`, `windows/installer/windowsInstallScript.iss`, `snapcraft.yaml`, `linux/snap/transaction_decorator.desktop`. After running it, commit, tag, and push — CI builds the Windows installer / deb / snap artifacts. See [testing-strategy.md](testing-strategy.md) for the per-platform smoke checklist.

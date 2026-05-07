@@ -171,17 +171,24 @@ def load_column_mappings(json_path):
 
 def assign_imported_values_to_new_row(column_indices, column_mapping,
                                       imported_row, original_csv, dot_decimal_separator):
-    date_columns = column_mapping.get("Date", [])
-    amount_columns = column_mapping.get("Amount", [])
+    """Build a new row dict from imported values.
+
+    Date/amount routing compares the canonical column name against constants
+    (`cts.DATE_COLUMN`, `cts.AMOUNT_COLUMN`) directly. The previous implementation
+    checked alias-list membership (`column_mapping.get("Date", [])`), which only
+    worked when the user's `import-dictionary.json` happened to list the canonical
+    name as one of the aliases. See ADR / `upgrade-pytest-9` §5.2.
+    """
+    del column_mapping  # retained for backward compatibility / future use; intentionally unused
 
     new_row = {col: np.nan for col in original_csv.columns}
     for orig_col, idx in column_indices.items():
         if pd.isna(imported_row.iloc[idx]):
             continue
         value = imported_row.iloc[idx]
-        if orig_col in date_columns:
+        if orig_col == cts.DATE_COLUMN:
             new_row[orig_col] = parse_date(value)
-        elif orig_col in amount_columns:
+        elif orig_col == cts.AMOUNT_COLUMN:
             new_row[orig_col] = normalize_number_format(str(value), dot_decimal_separator)
         else:
             new_row[orig_col] = value

@@ -16,6 +16,8 @@ This directory holds architecture documentation for Transaction Decorator.
 | [ADR-0005](decisions/adr-0005-force-update-other.md) | Force-update assigns `Other` when no rule matches | Accepted |
 | [ADR-0006](decisions/adr-0006-decimal-separator.md) | Decimal separator normalization | Accepted |
 | [ADR-0007](decisions/adr-0007-packaging.md) | Three packaging targets (Inno Setup / snap / deb) | Accepted |
+| [ADR-0008](decisions/adr-0008-pandas-3-cow.md) | Pandas 3 + Copy-on-Write contract | Accepted |
+| [ADR-0009](decisions/adr-0009-pytest-9.md) | Pytest 9 test-runner contract | Accepted |
 
 ## Diagrams
 

@@ -1,12 +1,12 @@
 {
   "column_mapping": {
-    "Date": ["Date","#Data operacji", "Data transakcji"],
-    "Wallet": ["Wallet","#Rachunek"],
-    "Type": ["Type"],
-    "Category name": ["Category name"],
-    "Amount": ["Amount","Kwota w walucie rachunku", "#Kwota"],
-    "Currency": ["Currency"],
-    "Note": ["Note","#Opis operacji", "Szczegó³y transakcji", "Szczegóły transakcji"],
+    "Date": ["Date", "#Data operacji", "Data transakcji", "Data operacji", "Data księgowania"],
+    "Wallet": ["Wallet", "#Rachunek"],
+    "Type": ["Type", "Rodzaj operacji", "Typ operacji"],
+    "Category name": ["Category name", "Kategoria"],
+    "Amount": ["Amount", "Kwota w walucie rachunku", "#Kwota", "Kwota operacji", "Kwota"],
+    "Currency": ["Currency", "Waluta"],
+    "Note": ["Note", "#Opis operacji", "Szczegó³y transakcji", "Szczegóły transakcji", "Tytułem", "Tytuł operacji"],
     "Labels": ["Labels"],
     "Author": ["Author"]
   }

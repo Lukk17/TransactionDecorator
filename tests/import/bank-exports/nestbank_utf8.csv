@@ -1,0 +1,21 @@
+Numer rachunku: 00000000000000000000000000
+Właściciel: NOWAK JANUSZ
+Historia operacji za okres od 2018-05-01 do 2026-05-07
+Liczba operacji: 14
+Suma uznań: 41150 PLN
+Suma obciążeń: -45001 PLN
+Data księgowania,Data operacji,Rodzaj operacji,Kwota,Waluta,Dane kontrahenta,Numer rachunku kontrahenta,Tytuł operacji,Saldo po operacji
+20-04-2020,20-04-2020,Przelewy wychodzące,-21060,PLN,Janusz Nowak,00000000000000000000000000,hajsik,149
+17-04-2020,17-04-2020,Przelewy przychodzące,21060,PLN,JANUSZ NOWAK|ANON STREET 99 GORZÓW 00-000,00000000000000000000000000,Przelew środków,18149
+16-07-2019,16-07-2019,Przelewy wychodzące,-9360,PLN,"Janusz Nowak|Anon Street 99, 00-000 Gorzów",00000000000000000000000000,hajsik,149
+05-06-2019,05-06-2019,Przelewy wychodzące,-9360,PLN,"Janusz Nowak|Anon Street 99, 00-000 Gorzów",00000000000000000000000000,hajsik,8149
+23-10-2018,23-10-2018,Przelewy przychodzące,2925,PLN,"The Currency Cloud Limited 164 Bishopsgate|London, EC2M 4LX United Kingdom",00000000000000000000000000,181020-XQHKGW001                    Revolut,16149
+11-06-2018,11-06-2018,Przelewy wychodzące,-7020,PLN,Janusz Nowak|Anon Street 99 00-000 Gorzów,00000000000000000000000000,hajsik,13649
+09-06-2018,09-06-2018,Opłaty i prowizje,-1,PLN,,,Prowizja za przelew natychmiastowy wychodzący BM,19649
+09-06-2018,09-06-2018,Przelewy wychodzące,-2340,PLN,Janusz Nowak|Anon Street 99 00-000 Gorzów,00000000000000000000000000,hajsik,19650
+06-06-2018,06-06-2018,Przelewy wychodzące,-1170,PLN,Janusz Nowak|Anon Street 99 00-000 Gorzów,00000000000000000000000000,hajsik,21650
+04-06-2018,04-06-2018,Przelewy przychodzące,12870,PLN,"The Currency Cloud Limited 164 Bishopsgate|London, EC2M 4LX United Kingdom",00000000000000000000000000,180601-NTMGSC001 Revolut,22650
+04-06-2018,04-06-2018,Przelewy wychodzące,-1170,PLN,Janusz Nowak|Anon Street 99 00-000 Gorzów,00000000000000000000000000,hajsik,11650
+16-05-2018,16-05-2018,Przelewy wychodzące,-1170,PLN,Bartłomiej Zieliński,00000000000000000000000000,na kurczaka,12650
+14-05-2018,14-05-2018,Przelewy przychodzące,7312,PLN,"The Currency Cloud Limited 164 Bishopsgate|London, EC2M 4LX United Kingdom",00000000000000000000000000,180511-WTNRXD001 Revolut,13650
+08-05-2018,08-05-2018,Przelewy przychodzące,3978,PLN,"The Currency Cloud Limited 164 Bishopsgate|London, EC2M 4LX United Kingdom",00000000000000000000000000,180502-TKRKMG001 Revolut,7400

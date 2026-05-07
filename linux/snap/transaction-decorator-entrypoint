@@ -1,8 +1,11 @@
 #!/bin/bash
+# Snap entrypoint — launches the bundled PyInstaller binary.
+# Python and all deps are embedded inside the binary; no system
+# python3 dependency.
+set -euo pipefail
 
 SETUP_SCRIPT="$SNAP/user-data/user-data-copy.sh"
 
-# Example check - adapt according to your specific needs
 if [ ! -f "$SNAP_USER_DATA/csv/allTransactions.csv" ]; then
     echo "Setup required. Executing $SETUP_SCRIPT..."
     bash "$SETUP_SCRIPT"
@@ -10,4 +13,4 @@ else
     echo "Setup already completed."
 fi
 
-python3 $SNAP/usr/lib/transaction-decorator/src/gui.py
+exec "$SNAP/usr/lib/transaction-decorator/TransactionDecorator" "$@"

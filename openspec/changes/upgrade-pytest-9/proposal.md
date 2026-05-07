@@ -18,6 +18,8 @@ Both layers ran clean. Of 20 patterns audited, zero require code changes.
 - **BREAKING** for any future code: `pytest.warns()` with no expected category is removed (must specify a warning class). Current suite uses none.
 - **BREAKING** for any future code: `yield_fixture` (deprecated since pytest 4) is fully removed. Use `@pytest.fixture` with `yield`.
 - Document the test-runner contract via ADR-0009 so future contributors understand which patterns are permitted and which silently no-op.
+- **Bundled** (do NOT defer): add `pytest-qt` to `[project.optional-dependencies] dev` and write Qt UI tests for `widget_assembler`, `title_bar`, `confirmation_dialog`, and `FramelessMainWindow` (including `_read_row_inputs` validation). These were the residual coverage gap from the pre-bump audit; the natural moment to add them is when the test runner itself is being upgraded.
+- **Bundled** (do NOT defer): fix the `assign_imported_values_to_new_row` canonical-name fragility — the date/amount parsing check currently only works because the real `import-dictionary.json` happens to include the canonical column name in each alias list. Replace alias-list membership with a constant comparison so a user-edited dictionary that omits the canonical name does not silently disable normalization. Discovered during the gap-fill testing pass.
 
 ## Capabilities
 
@@ -32,7 +34,7 @@ Both layers ran clean. Of 20 patterns audited, zero require code changes.
 ## Impact
 
 - **Code**: No source changes. Test files audited (20-pattern grep) — all 7 test modules use only stable pytest APIs.
-- **Tests**: 59/59 passing on pytest 9.0.3 with strict warnings (`-W error -W error::PendingDeprecationWarning`). Collection-only run also clean.
+- **Tests**: 138/138 passing on pytest 9.0.3 with strict warnings (`-W error -W error::PendingDeprecationWarning`). Collection-only run also clean. After the bundled additions in §5, the count will grow further.
 - **CI / packaging**: `pyproject.toml` pin update only. Pytest is a `dev` extra and does not ship in user-facing artifacts (Windows installer / deb / snap), so end users are unaffected.
 - **Plugins**: We use no pytest plugins. No compatibility surface.
 - **ADR-0009** added to `docs/architecture/decisions/`.

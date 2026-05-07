@@ -102,6 +102,26 @@ Empirical summary: of 20 distinct risk patterns audited, 0 require changes. The 
 
 Specifically: do not enable `--strict-markers` / `--strict-config`, and do not switch `--import-mode`. Both are reasonable defaults but they are independent decisions; bundling them into this migration would make rollback noisier.
 
+## Bundled scope (rationale for not splitting into separate proposals)
+
+Two follow-up items were surfaced during the gap-fill audit that preceded this proposal. They are bundled here, not split:
+
+### Item A — pytest-qt + Qt UI tests
+
+`tests/` currently has zero coverage of `gui_elements/widget_assembler.py`, `title_bar.py`, `confirmation_dialog.py`, or `FramelessMainWindow.__init__`/`_read_row_inputs`. Covering them requires a Qt-aware test fixture (`qtbot`), which means adding `pytest-qt` to dev extras. The natural moment to add a pytest plugin is during a pytest version bump — bundling avoids a future "we never wrote those Qt tests" drift.
+
+**Decision:** Add `pytest-qt` (latest version compatible with pytest 9.0.x) to `[project.optional-dependencies] dev` in this change, and ship the four new Qt unit-test files (`test_widget_assembler.py`, `test_title_bar.py`, `test_confirmation_dialog.py`, `test_main_window.py`) in this change.
+
+**Alternative considered:** File a separate `add-qt-ui-tests` proposal. Rejected because it would orphan — pytest bumps are infrequent and the gap would persist for years.
+
+### Item B — Importer canonical-name fragility
+
+`assign_imported_values_to_new_row` in `transactions_importer.py` decides whether to apply date parsing (`parse_date`) or amount normalization (`normalize_number_format`) based on `if orig_col in date_columns` where `date_columns = column_mapping.get("Date", [])`. The list is the imported-CSV alias list (e.g., `["#Data operacji", "Data transakcji"]`). The check accidentally works only because the real `import-dictionary.json` includes the canonical name `"Date"` as the first alias. A user editing their dictionary to remove the canonical name (e.g., because they think aliases are exhaustive) would silently lose date parsing — dates would pass through as raw strings, breaking `sort_dataframe_by_date` downstream. Documented in `tests/unit/test_importer_extra.py::test_assign_imported_values_skips_date_parsing_when_canonical_name_absent`.
+
+**Decision:** Fix in this change. The fix is a 4-line code change (`if orig_col == cts.DATE_COLUMN: ... elif orig_col == cts.AMOUNT_COLUMN: ...`) plus a one-line test inversion. Bundled because: (a) it's a testing-quality concern surfaced during the test gap-fill, (b) it's small enough that a separate change would have more administrative overhead than code, (c) the fix and the new Qt tests both touch test infrastructure.
+
+**Alternative considered:** File a separate `fix-importer-canonical-name-fragility` proposal. Rejected on cost-of-process grounds — the change is genuinely trivial.
+
 ## Coverage gaps the audit cannot reach
 
 For symmetry with `upgrade-pandas-3`, the same four gaps are noted, but pytest 9 only meaningfully impacts one of them:

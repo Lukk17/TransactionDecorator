@@ -167,7 +167,7 @@ def sort_dataframe_by_date(df):
     if cts.DATE_COLUMN not in df.columns:
         logger.warning("Date column '%s' not found in DataFrame.", cts.DATE_COLUMN)
         return df
-    df[cts.DATE_COLUMN] = pd.to_datetime(df[cts.DATE_COLUMN], dayfirst=True)
+    df[cts.DATE_COLUMN] = pd.to_datetime(df[cts.DATE_COLUMN], dayfirst=True, format='mixed')
     df = df.sort_values(by=cts.DATE_COLUMN, ascending=False)
     df[cts.DATE_COLUMN] = df[cts.DATE_COLUMN].dt.strftime(cts.OUTPUT_DATE_FORMAT)
     return df

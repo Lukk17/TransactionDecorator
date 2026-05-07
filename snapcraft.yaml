@@ -1,4 +1,12 @@
-# snap package name - need to be same in a path in TransactionDecorator sh entrypoint
+# Snap package — bundles a self-contained PyInstaller binary.
+# Python and every runtime dep are embedded inside the binary, NOT
+# pulled from the host system or from snap stage-packages. This
+# matches the Windows installer and Linux .deb builds so the snap
+# uses the exact same pinned dep versions as the other channels.
+#
+# Build from the project root:
+#   snapcraft
+
 name: transaction-decorator
 base: core22
 version: '1.0.1'
@@ -8,9 +16,6 @@ grade: stable
 confinement: classic
 
 apps:
-#  this needs to be the same name as top-level "name:" if not then to run snap from terminal:
-#  <top-level-name>.<name-in-apps> example if this name in "apps: will be transaction-decorator-app:
-#  to run in terminal you will need command: transaction-decorator.transaction-decorator-app
   transaction-decorator:
     environment:
       TRANSACTION_DECORATOR_SNAP_NAME: transaction-decorator
@@ -30,49 +35,51 @@ apps:
     restart-condition: never
 
 parts:
-  sources-part:
-    plugin: dump
-    source: src/
-    organize:
-      '*': usr/lib/transaction-decorator/src/
+  # Build the PyInstaller self-contained binary on the snapcraft build host.
+  # The binary embeds Python and all pip deps from pyproject.toml.
+  pyinstaller-binary:
+    plugin: nil
+    source: .
+    build-packages:
+      - python3
+      - python3-pip
+      - python3-venv
+    override-build: |
+      python3 -m venv /tmp/td-build-venv
+      /tmp/td-build-venv/bin/pip install --upgrade pip
+      /tmp/td-build-venv/bin/pip install . pyinstaller
+      mkdir -p "$SNAPCRAFT_PART_INSTALL/usr/lib/transaction-decorator"
+      /tmp/td-build-venv/bin/pyinstaller --clean \
+        --distpath "$SNAPCRAFT_PART_INSTALL/usr/lib/transaction-decorator" \
+        "$SNAPCRAFT_PART_SRC/TransactionDecorator.spec"
+      [ -f "$SNAPCRAFT_PART_INSTALL/usr/lib/transaction-decorator/TransactionDecorator" ] || \
+        (echo "ERROR: PyInstaller did not produce the expected binary" >&2 && exit 1)
 
   icons-part:
-    after: [ sources-part ]
+    after: [pyinstaller-binary]
     plugin: dump
     source: icons/
     organize:
       '*': usr/share/transaction-decorator/icons/
 
   csv-part:
-    after: [ icons-part ]
+    after: [icons-part]
     plugin: dump
     source: csv/
     organize:
       'allTransactions.csv': usr/share/transaction-decorator/csv/
 
   dictionary-part:
-    after: [ csv-part ]
+    after: [csv-part]
     plugin: dump
     source: dictionary/
     organize:
       '*': usr/share/transaction-decorator/dictionary/
 
   entrypoint-part:
-    after: [ dictionary-part ]
+    after: [dictionary-part]
     plugin: dump
     source: linux/snap/
     organize:
       'transaction_decorator.desktop': usr/share/applications/
       'transaction-decorator-entrypoint': usr/bin/
-
-  python-part:
-    after: [ entrypoint-part ]
-    plugin: nil
-    source: .
-    build-packages:
-      - python3-dev  # Ensure Python development files are available
-      - python3-setuptools  # Required for setup.py
-      - python3-pip
-    override-build: |
-      # Use the Python from the build environment
-      python3 $SNAPCRAFT_PART_SRC/setup.py install --root=$SNAPCRAFT_PART_INSTALL
